@@ -1,2 +1,2 @@
 # small
-Small project for COP 4331 Group 2
+a simple web-based personal contact manager
