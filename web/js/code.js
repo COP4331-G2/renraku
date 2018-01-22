@@ -7,8 +7,6 @@ var lastName = "";
 
 function doLogin()
 {
-    console.log("HELLO");
-
     userId = 0;
     firstName = "";
     lastName = "";
@@ -27,8 +25,6 @@ function doLogin()
     try
     {
         xhr.send(jsonPayload);
-
-        console.log(jsonPayload);
 
         var jsonObject = JSON.parse( xhr.responseText );
 
