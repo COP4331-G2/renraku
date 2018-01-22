@@ -6,7 +6,9 @@ $id        = 0;
 $firstName = "";
 $lastName  = "";
 
-$conn = new mysqli("mydb.c17vnanzumzs.us-east-1.rds.amazonaws.com", "root", "mypassword", "mydb");
+$secrets = readSecrets();
+$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
+
 if ($conn->connect_error) {
     returnWithError($conn->connect_error);
 } else {
@@ -26,6 +28,31 @@ if ($conn->connect_error) {
 }
 
 returnWithInfo($firstName, $lastName, $id);
+
+/**
+ * Reads MySQL database login information through a 'secrets' file
+ *
+ *  @return array (array containing database login information)
+ */
+function readSecrets()
+{
+    $secretsFile = fopen("../secrets", "r");
+
+    while (!feof($secretsFile)) {
+        $secretsString = fgets($secretsFile);
+    }
+
+    fclose($secretsFile);
+
+    $secretsArray = explode(",", $secretsString);
+
+    $secrets['host'] = $secretsArray[0];
+    $secrets['username'] = $secretsArray[1];
+    $secrets['passwd'] = $secretsArray[2];
+    $secrets['dbname'] = $secretsArray[3];
+
+    return $secrets;
+}
 
 function getRequestInfo()
 {
