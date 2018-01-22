@@ -1,4 +1,4 @@
-var urlBase = 'LAMPAPI';
+var urlBase = "LAMPAPI";
 var extension = "php";
 
 var userId = 0;
@@ -7,18 +7,20 @@ var lastName = "";
 
 function doLogin()
 {
+    console.log("HELLO");
+
     userId = 0;
     firstName = "";
     lastName = "";
-    
+
     var login = document.getElementById("loginName").value;
     var password = document.getElementById("loginPassword").value;
-    
+
     document.getElementById("loginResult").innerHTML = "";
-    
+
     var jsonPayload = '{"login" : "' + login + '", "password" : "' + password + '"}';
     var url = urlBase + '/Login.' + extension;
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, false);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -26,24 +28,26 @@ function doLogin()
     {
         xhr.send(jsonPayload);
 
+        console.log(jsonPayload);
+
         var jsonObject = JSON.parse( xhr.responseText );
 
         userId = jsonObject.id;
-        
+
         if( userId < 1 )
         {
             document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
             return;
         }
-        
+
         firstName = jsonObject.firstName;
         lastName = jsonObject.lastName;
 
         document.getElementById("userName").innerHTML = firstName + " " + lastName;
-        
+
         document.getElementById("loginName").value = "";
         document.getElementById("loginPassword").value = "";
-        
+
         hideOrShow( "loggedInDiv", true);
         hideOrShow( "accessUIDiv", true);
         hideOrShow( "loginDiv", false);
@@ -52,14 +56,14 @@ function doLogin()
     {
         document.getElementById("loginResult").innerHTML = err.message;
     }
-    
+
 }
 
 function doLogout()
 {
     userId = 0;
     firstName = "";
-    lastName = "";  
+    lastName = "";
 
     hideOrShow( "loggedInDiv", false);
     hideOrShow( "accessUIDiv", false);
@@ -75,7 +79,7 @@ function hideOrShow( elementId, showState )
         vis = "hidden";
         dis = "none";
     }
-    
+
     document.getElementById( elementId ).style.visibility = vis;
     document.getElementById( elementId ).style.display = dis;
 }
@@ -84,18 +88,18 @@ function addColor()
 {
     var newColor = document.getElementById("colorText").value;
     document.getElementById("colorAddResult").innerHTML = "";
-    
+
     var jsonPayload = '{"color" : "' + newColor + '", "userId" : ' + userId + '}';
     var url = urlBase + '/AddColor.' + extension;
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
     try
     {
-        xhr.onreadystatechange = function() 
+        xhr.onreadystatechange = function()
         {
-            if (this.readyState == 4 && this.status == 200) 
+            if (this.readyState == 4 && this.status == 200)
             {
                 document.getElementById("colorAddResult").innerHTML = "Color has been added";
             }
@@ -106,34 +110,34 @@ function addColor()
     {
         document.getElementById("colorAddResult").innerHTML = err.message;
     }
-    
+
 }
 
 function searchColor()
 {
     var srch = document.getElementById("searchText").value;
     document.getElementById("colorSearchResult").innerHTML = "";
-    
+
     var colorList = document.getElementById("colorList");
     colorList.innerHTML = "";
-    
+
     var jsonPayload = '{"search" : "' + srch + '"}';
     var url = urlBase + '/SearchColors.' + extension;
-    
+
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
     try
     {
-        xhr.onreadystatechange = function() 
+        xhr.onreadystatechange = function()
         {
-            if (this.readyState == 4 && this.status == 200) 
+            if (this.readyState == 4 && this.status == 200)
             {
                 hideOrShow( "colorList", true );
-                
+
                 document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
                 var jsonObject = JSON.parse( xhr.responseText );
-                
+
                 var i;
                 for( i=0; i<jsonObject.results.length; i++ )
                 {
@@ -150,5 +154,5 @@ function searchColor()
     {
         document.getElementById("colorSearchResult").innerHTML = err.message;
     }
-    
+
 }
