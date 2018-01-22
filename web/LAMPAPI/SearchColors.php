@@ -30,13 +30,13 @@ returnWithInfo($searchResults);
 function getRequestInfo()
 {
     return json_decode(file_get_contents('php://input'), true);
-		header('Access-Control-Allow-Origin: *');
-		header('Access-Control-Allow-Headers: Content-Type, origin');
 }
 
 function sendResultInfoAsJson($obj)
 {
     header('Content-type: application/json');
+	header('Access-Control-Allow-Origin: *');
+	header('Access-Control-Allow-Headers: Content-Type, origin');
     echo $obj;
 }
 
