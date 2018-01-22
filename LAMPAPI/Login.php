@@ -35,6 +35,8 @@ function getRequestInfo()
 function sendResultInfoAsJson($obj)
 {
     header('Content-type: application/json');
+		header('Access-Control-Allow-Origin: *');
+		header('Access-Control-Allow-Headers: Content-Type, origin');
     echo $obj;
 }
 
