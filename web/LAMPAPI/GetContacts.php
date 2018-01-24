@@ -9,7 +9,7 @@
 	}
 	else 
 	{
-		$sql    = "SELECT id, firstName, lastName, phoneNumber, emailAddress  FROM Contacts where userID=" . $inData["userID"];
+		$sql    = "SELECT * FROM Contacts where userID=" . $inData["userID"];
 		$result = $conn->query($sql);
 		$row = $result->fetch_assoc();
 		$count = 0;
@@ -29,7 +29,7 @@
 			$phoneNumber = $row['phoneNumber'];
 			$emailAddress = $row['emailAddress'];
 
-			$searchResults .= "[$id,$firstName,$lastName,$phoneNumber,$emailAddress]";
+			$searchResults .= "[$id,'$firstName','$lastName','$phoneNumber','$emailAddress']";
 		}
 
 		returnWithInfo($searchResults);
