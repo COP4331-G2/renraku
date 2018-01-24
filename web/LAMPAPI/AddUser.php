@@ -4,7 +4,9 @@
 	$username = protectInjection($inData["username"]);
 	$password = $inData["password"];
 
-	$conn = new mysqli("mydb.c17vnanzumzs.us-east-1.rds.amazonaws.com", "root", "mypassword", "small");
+	$secrets = readSecrets();
+	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
+
 	if ($conn->connect_error) 
 	{
 		returnWithError( $conn->connect_error );
@@ -31,7 +33,11 @@
 
 								if( $result = $conn->query($sql) != TRUE )
 								{
-									returnWithError( $conn->error );
+									returnWithError( $conn->error );	
+								}
+								else 
+								{
+									returnWithError("");
 								}
 							}
 							else 
@@ -42,8 +48,7 @@
 						else 
 						{
 							returnWithError( $conn->error );
-						}								
-						$conn->close();						
+						}							
 					}
 					else 
 					{
@@ -65,9 +70,8 @@
 			returnWithError("Username needs to be less than 45 characters.")
 		}
 	}
-	
-	returnWithError("");
-	
+	$conn->close();
+		
 	function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);
@@ -92,5 +96,30 @@
 		$result = str_replace("'", "", $string);
 		$result2 = str_replace(";", "", $result);
 		return $result2.trim();
+	}
+
+	/**
+	 * Reads MySQL database login information through a 'secrets' file
+	 *
+	 *  @return array (array containing database login information)
+	 */
+	function readSecrets()
+	{
+		$secretsFile = fopen("../secrets", "r");
+
+		while (!feof($secretsFile)) {
+			$secretsString = fgets($secretsFile);
+		}
+
+		fclose($secretsFile);
+
+		$secretsArray = explode(",", $secretsString);
+
+		$secrets['host'] = $secretsArray[0];
+		$secrets['username'] = $secretsArray[1];
+		$secrets['passwd'] = $secretsArray[2];
+		$secrets['dbname'] = $secretsArray[3];
+
+		return $secrets;
 	}
 ?>
