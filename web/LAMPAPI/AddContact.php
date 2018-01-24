@@ -5,7 +5,7 @@
 	$lasttName = $inData["lastName"];
 	$phoneNumber = $inData["phoneNumber"];
 	$emailAddress = $inData["emailAddress"];
-	$userId = $inData["userId"];
+	$userID = $inData["userID"];
 
 	$secrets = readSecrets();
 	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
@@ -16,7 +16,7 @@
 	} 
 	else
 	{   		
-		$sql = "INSERT into Contacts (firstName,lastName,phoneNumber,emailAddress,userID) VALUES ('" . $firstName .  "','" . $lasttName . "','" . $phoneNumber . "','" . $emailAddress . "'," . $userId . ")";
+		$sql = "INSERT into Contacts (firstName,lastName,phoneNumber,emailAddress,userID) VALUES ('" . $firstName .  "','" . $lasttName . "','" . $phoneNumber . "','" . $emailAddress . "'," . $userID . ")";
 		error_log($sql);
 
 		if( $result = $conn->query($sql) != TRUE )
