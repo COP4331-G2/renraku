@@ -17,11 +17,11 @@
 
 		while($row = $result->fetch_assoc())
 		{
-			if(count > 0)
+			if($count > 0)
 			{
 				$searchResults .= ",";
 			}
-			count++;
+			$count++;
 
 			$id = $row['id'];
 			$firstName = $row['firstName'];
