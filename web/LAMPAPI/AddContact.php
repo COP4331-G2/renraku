@@ -12,9 +12,7 @@
 
 	if ($conn->connect_error) 
 	{
-		returnWithError( $conn->connect_error );		
-		$conn->close();
-		die;
+		returnWithError( $conn->connect_error );	
 	} 
 	else
 	{   		
@@ -24,9 +22,12 @@
 		{
 			returnWithError( $conn->error );
 		}
-		$conn->close();
-		returnWithError("");
+		else
+		{		
+			returnWithError("");
+		}
 	}	
+	$conn->close();
 	
 	function getRequestInfo()
 	{
