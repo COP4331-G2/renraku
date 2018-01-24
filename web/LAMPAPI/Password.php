@@ -11,7 +11,9 @@ $password = "password";
 storePassword($password, $conn);
 
 // Verify that the password entered matches the DB's hashed password
-verifyPassword($password, $conn);
+$result = verifyPassword($password, $conn);
+
+print($result . "\n");
 
 $conn->close();
 
@@ -44,21 +46,15 @@ function storePassword($password, $conn)
 {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $conn->query("INSERT INTO Users (username, password) VALUES ('test2', '$hashedPassword')");
+    $conn->query("INSERT INTO Users (username, password) VALUES ('testing', '$hashedPassword')");
 }
 
 function verifyPassword($password, $conn)
 {
-    $hashedPassword = $conn->query("SELECT password FROM Users WHERE username='test2'");
+    $hashedPassword = $conn->query("SELECT * FROM Users WHERE username='testing'");
     $hashedPassword = $hashedPassword->fetch_assoc();
     $hashedPassword = $hashedPassword['password'];
+    $hashedPassword = substr($hashedPassword, 0, 60);
 
-    print("* $password\n");
-    print("* $hashedPassword\n");
-
-    if (password_verify($password, $hashedPassword)) {
-        print("* Password verification successful\n");
-    } else {
-        print("* Password verification failed\n");
-    }
+    return password_verify($password, $hashedPassword);
 }
