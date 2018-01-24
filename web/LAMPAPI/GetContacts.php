@@ -1,6 +1,5 @@
 <?php
 	$inData = getRequestInfo();
-
 	$secrets = readSecrets();
 	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
@@ -10,20 +9,30 @@
 	}
 	else 
 	{
-		$sql    = "SELECT firstName, lastName, phoneNumber, emailAddress  FROM Contacts where userID=" . $inData["userID"];
+		$sql    = "SELECT id, firstName, lastName, phoneNumber, emailAddress  FROM Contacts where userID=" . $inData["userID"];
 		$result = $conn->query($sql);
+		$row = $result->fetch_assoc();
+		$count = 0;
+		$searchResults = "";
 
-		if ($result->num_rows > 0) 
+		while($row = $result->fetch_assoc())
 		{
-			$row = $result->fetch_assoc();
+			if(count > 0)
+			{
+				$searchResults .= ",";
+			}
+			count++;
 
-			//Have to iterate through rows and create JSON object that sends information back to front end
-			returnWithInfo();
-		} 
-		else 
-		{
-			returnWithError("");
-		}		
+			$id = $row['id'];
+			$firstName = $row['firstName'];
+			$lastName = $row['lastName'];
+			$phoneNumber = $row['phoneNumber'];
+			$emailAddress = $row['emailAddress'];
+
+			$searchResults .= "[$id,$firstName,$lastName,$phoneNumber,$emailAddress]";
+		}
+
+		returnWithInfo($searchResults);
 	}
 	$conn->close();
 
@@ -72,9 +81,9 @@
 		sendResultInfoAsJson($retValue);
 	}
 
-	function returnWithInfo()
+	function returnWithInfo( $searchResults )
 	{
-		//TODO: Parse JSON object and send it out
-		sendResultInfoAsJson();
+		$retValue = '{"results":[' . $searchResults . '],"error":""}';
+		sendResultInfoAsJson($retValue);
 	}
 ?>
