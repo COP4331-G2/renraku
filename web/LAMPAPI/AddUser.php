@@ -67,7 +67,7 @@
 		}
 		else
 		{
-			returnWithError("Username needs to be less than 45 characters.")
+			returnWithError("Username needs to be less than 45 characters.");
 		}
 	}
 	$conn->close();
