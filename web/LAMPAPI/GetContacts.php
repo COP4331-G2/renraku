@@ -11,7 +11,6 @@
 	{
 		$sql    = "SELECT * FROM Contacts where userID=" . $inData["userID"];
 		$result = $conn->query($sql);
-		$row = $result->fetch_assoc();
 		$count = 0;
 		$searchResults = "";
 
@@ -29,7 +28,7 @@
 			$phoneNumber = $row['phoneNumber'];
 			$emailAddress = $row['emailAddress'];
 
-			$searchResults .= "[$id,\"$firstName\",\"$lastName\",\"$phoneNumber\",\"$emailAddress\"]";
+			$searchResults .= "[$id,\"$firstName\",\"$lastName\",$phoneNumber,\"$emailAddress\"]";
 		}
 
 		returnWithInfo($searchResults);
