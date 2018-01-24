@@ -7,7 +7,7 @@
 	$secrets = readSecrets();
 	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
-	if ($conn->connect_error) 
+	if ( $conn->connect_error ) 
 	{
 		returnWithError( $conn->connect_error );
 	} 
@@ -107,7 +107,8 @@
 	{
 		$secretsFile = fopen("../secrets", "r");
 
-		while (!feof($secretsFile)) {
+		while (!feof($secretsFile)) 
+		{
 			$secretsString = fgets($secretsFile);
 		}
 

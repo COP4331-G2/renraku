@@ -4,7 +4,7 @@
 	$firstName = $inData["firstName"];
 	$lasttName = $inData["lastName"];
 	$phoneNumber = $inData["phoneNumber"];
-	$emailAdress = $inData["emailAdress"];
+	$emailAddress = $inData["emailAddress"];
 	$userId = $inData["userId"];
 
 	$secrets = readSecrets();
@@ -16,7 +16,7 @@
 	} 
 	else
 	{   		
-		$sql = "insert into Contacts (firstName,lastName,phoneNumber,emailAdress,UserId) VALUES ('" . $firstName .  "','" . $lasttName . "','" . $phoneNumber . "','" . $emailAdress . "'," . $userId . ")";
+		$sql = "INSERT into Contacts (firstName,lastName,phoneNumber,emailAddress,UserId) VALUES ('" . $firstName .  "','" . $lasttName . "','" . $phoneNumber . "','" . $emailAddress . "'," . $userId . ")";
 		
 		if( $result = $conn->query($sql) != TRUE )
 		{
