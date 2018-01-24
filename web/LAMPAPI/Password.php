@@ -4,16 +4,16 @@
 
 // Open a MySQL connection
 $secrets = readSecrets();
-$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
+$conn    = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
 // Create (hard-coded) and store the password
-$password = "password";
+$password = "COP4331";
 storePassword($password, $conn);
 
 // Verify that the password entered matches the DB's hashed password
-$result = verifyPassword($password, $conn);
+// $result = verifyPassword($password, $conn);
 
-print($result . "\n");
+// print($result . "\n");
 
 $conn->close();
 
@@ -34,10 +34,10 @@ function readSecrets()
 
     $secretsArray = explode(",", $secretsString);
 
-    $secrets['host'] = $secretsArray[0];
+    $secrets['host']     = $secretsArray[0];
     $secrets['username'] = $secretsArray[1];
-    $secrets['passwd'] = $secretsArray[2];
-    $secrets['dbname'] = $secretsArray[3];
+    $secrets['passwd']   = $secretsArray[2];
+    $secrets['dbname']   = $secretsArray[3];
 
     return $secrets;
 }
@@ -46,7 +46,7 @@ function storePassword($password, $conn)
 {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $conn->query("INSERT INTO Users (username, password) VALUES ('testing', '$hashedPassword')");
+    $conn->query("INSERT INTO Users (username, password) VALUES ('rickl', '$hashedPassword')");
 }
 
 function verifyPassword($password, $conn)

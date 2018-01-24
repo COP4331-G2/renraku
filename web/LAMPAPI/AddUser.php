@@ -1,126 +1,96 @@
 <?php
-	$inData = getRequestInfo();
-	
-	$username = protectInjection($inData["username"]);
-	$password = $inData["password"];
+$inData = getRequestInfo();
 
-	$secrets = readSecrets();
-	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
+$username = protectInjection($inData["username"]);
+$password = $inData["password"];
 
-	if ( $conn->connect_error ) 
-	{
-		returnWithError( $conn->connect_error );
-	} 
-	else
-	{   		
-		if(strlen($username) <= 45)
-		{		
-			if(strlen($password) <= 45)
-			{			
-				if(strlen($username) > 0)
-				{
-					if(strlen($password) > 0)
-					{
-						$sql = "select username from Users where username like username='" . $username . "'";
+$secrets = readSecrets();
+$conn    = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
-						$result = $conn->query($sql);	
-						
-						if( $result = $conn->query($sql) == TRUE )
-						{
-							if ($result->num_rows == 0) 
-							{			
-								$sql = "insert into Users (username,password) VALUES ('" . $username .  "','" . $password . "')";
+sendQuery($conn);
 
-								if( $result = $conn->query($sql) != TRUE )
-								{
-									returnWithError( $conn->error );	
-								}
-								else 
-								{
-									returnWithError("");
-								}
-							}
-							else 
-							{
-								returnWithError("Username already exists!");
-							}					
-						}
-						else 
-						{
-							returnWithError( $conn->error );
-						}							
-					}
-					else 
-					{
-						returnWithError("Password cannot be empty.");
-					}
-				}
-				else 
-				{
-					returnWithError("Username cannot be empty.");
-				}
-			}
-			else 
-			{
-				returnWithError("Password needs to be less than 45 characters.");
-			}
-		}
-		else
-		{
-			returnWithError("Username needs to be less than 45 characters.");
-		}
-	}
-	$conn->close();
-		
-	function getRequestInfo()
-	{
-		return json_decode(file_get_contents('php://input'), true);
-	}
+$conn->close();
 
-	function sendResultInfoAsJson( $obj )
-	{
-		header('Content-type: application/json');
-		header('Access-Control-Allow-Origin: *');
-		header('Access-Control-Allow-Headers: Content-Type, origin');
-		echo $obj;
-	}
-	
-	function returnWithError( $err )
-	{
-		$retValue = '{"error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
-	}
-	
-	function protectInjection($string)
-	{
-		$result = str_replace("'", "", $string);
-		$result2 = str_replace(";", "", $result);
-		return $result2.trim();
-	}
+function sendQuery($conn)
+{
+    if ($conn->connect_error) {
+        returnWithError($conn->connect_error);
+    } else if (strlen($username) > 60) {
+        returnWithError("Username needs to be equal to or less than 60 characters.");
+    } else if (strlen($username) <= 0) {
+        returnWithError("Username cannot be empty.");
+    } else if (strlen($password) <= 0) {
+        returnWithError("Password cannot be empty.");
+    }
 
-	/**
-	 * Reads MySQL database login information through a 'secrets' file
-	 *
-	 *  @return array (array containing database login information)
-	 */
-	function readSecrets()
-	{
-		$secretsFile = fopen("../secrets", "r");
+    $result = $conn->query("SELECT username FROM Users WHERE username='$username'");
 
-		while (!feof($secretsFile)) 
-		{
-			$secretsString = fgets($secretsFile);
-		}
+    if ($result->num_rows != 0) {
+        returnWithError("Username already exists!");
+    }
 
-		fclose($secretsFile);
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-		$secretsArray = explode(",", $secretsString);
+    $result = $conn->query("INSERT INTO Users (username, password) VALUES ('$username', '$hashedPassword')");
 
-		$secrets['host'] = $secretsArray[0];
-		$secrets['username'] = $secretsArray[1];
-		$secrets['passwd'] = $secretsArray[2];
-		$secrets['dbname'] = $secretsArray[3];
+    if ($result) {
+        returnWithError("");
+    } else {
+        returnWithError($conn->error);
+    }
+}
 
-		return $secrets;
-	}
-?>
+function getRequestInfo()
+{
+    return json_decode(file_get_contents('php://input'), true);
+}
+
+function sendResultInfoAsJson($obj)
+{
+    header('Content-type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Headers: Content-Type, origin');
+    echo $obj;
+}
+
+function returnWithError($err)
+{
+    $retValue = '{"error":"' . $err . '"}';
+    sendResultInfoAsJson($retValue);
+}
+
+function protectInjection($string)
+{
+    $result  = str_replace("'", "", $string);
+    $result2 = str_replace(";", "", $result);
+    return trim($result2);
+}
+
+/**
+ * Reads MySQL database login information through a 'secrets' file
+ *
+ *  @return array (array containing database login information)
+ */
+function readSecrets()
+{
+    $secretsFile = fopen("../secrets", "r");
+
+    if (!$secretsFile) {
+        returnWithError("Cannot access secrets file.");
+    }
+
+    while (!feof($secretsFile)) {
+        $secretsString = fgets($secretsFile);
+    }
+
+    fclose($secretsFile);
+
+    $secretsArray = explode(",", $secretsString);
+
+    $secrets['host']     = $secretsArray[0];
+    $secrets['username'] = $secretsArray[1];
+    $secrets['passwd']   = $secretsArray[2];
+    $secrets['dbname']   = $secretsArray[3];
+
+    return $secrets;
+}
