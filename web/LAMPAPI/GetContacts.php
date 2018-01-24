@@ -29,7 +29,7 @@
 			$phoneNumber = $row['phoneNumber'];
 			$emailAddress = $row['emailAddress'];
 
-			$searchResults .= "[$id,'$firstName','$lastName','$phoneNumber','$emailAddress']";
+			$searchResults .= "[$id,\"$firstName\",\"$lastName\",\"$phoneNumber\",\"$emailAddress\"]";
 		}
 
 		returnWithInfo($searchResults);
