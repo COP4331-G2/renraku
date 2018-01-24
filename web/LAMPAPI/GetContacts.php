@@ -74,6 +74,7 @@
 
 	function returnWithInfo()
 	{
+		//TODO: Parse JSON object and send it out
 		sendResultInfoAsJson();
 	}
 ?>
