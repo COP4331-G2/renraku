@@ -1,6 +1,6 @@
 <?php
 	$inData = getRequestInfo();
-	
+
 	$firstName = $inData["firstName"];
 	$lasttName = $inData["lastName"];
 	$phoneNumber = $inData["phoneNumber"];
@@ -10,12 +10,12 @@
 	$secrets = readSecrets();
 	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
-	if ($conn->connect_error) 
+	if ($conn->connect_error)
 	{
-		returnWithError( $conn->connect_error );	
-	} 
+		returnWithError( $conn->connect_error );
+	}
 	else
-	{   		
+	{
 		$sql = "INSERT into Contacts (firstName,lastName,phoneNumber,emailAddress,userID) VALUES ('" . $firstName .  "','" . $lasttName . "'," . $phoneNumber . ",'" . $emailAddress . "'," . $userID . ")";
 		error_log($sql);
 
@@ -24,12 +24,12 @@
 			returnWithError( $conn->error );
 		}
 		else
-		{		
+		{
 			returnWithError("");
 		}
-	}	
+	}
 	$conn->close();
-	
+
 	function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);
@@ -42,13 +42,13 @@
 		header('Access-Control-Allow-Headers: Content-Type, origin');
 		echo $obj;
 	}
-	
+
 	function returnWithError( $err )
 	{
 		$retValue = '{"error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
-	
+
 	/**
 	 * Reads MySQL database login information through a 'secrets' file
 	 *
