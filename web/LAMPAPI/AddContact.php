@@ -4,12 +4,6 @@ require 'Connection.php';
 
 $inData = getRequestInfo();
 
-$firstName    = $inData["firstName"];
-$lasttName    = $inData["lastName"];
-$phoneNumber  = $inData["phoneNumber"];
-$emailAddress = $inData["emailAddress"];
-$userID       = $inData["userID"];
-
 $secrets = readSecrets();
 $conn    = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
@@ -19,6 +13,12 @@ $conn->close();
 
 function insertContact($conn, $inData)
 {
+    $firstName    = $inData["firstName"];
+    $lasttName    = $inData["lastName"];
+    $phoneNumber  = $inData["phoneNumber"];
+    $emailAddress = $inData["emailAddress"];
+    $userID       = $inData["userID"];
+
     if ($conn->connect_error) {
         returnWithError($conn->connect_error);
     } else {
