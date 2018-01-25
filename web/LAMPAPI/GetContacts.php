@@ -1,88 +1,91 @@
 <?php
-	$inData = getRequestInfo();
-	$secrets = readSecrets();
-	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
-	if ($conn->connect_error) 
-	{
-		returnWithError($conn->connect_error);	
-	}
-	else 
-	{
-		$sql    = "SELECT * FROM Contacts where userID=" . $inData["userID"];
-		$result = $conn->query($sql);
-		$count = 0;
-		$searchResults = "";
+$inData = getRequestInfo();
 
-		while($row = $result->fetch_assoc())
-		{
-			if($count > 0)
-			{
-				$searchResults .= ",";
-			}
-			$count++;
+$secrets = readSecrets();
+$conn    = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
-			$id = $row['id'];
-			$firstName = $row['firstName'];
-			$lastName = $row['lastName'];
-			$phoneNumber = $row['phoneNumber'];
-			$emailAddress = $row['emailAddress'];
+getContacts($conn, $inData);
 
-			$searchResults .= '{"contactID":'.$id.',"firstName":"'.$firstName.'","lastName":"'.$lastName.'","phoneNumber":'.$phoneNumber.',"emailAddress":"'.$emailAddress.'"}';
-		}
+$conn->close();
 
-		returnWithInfo($searchResults);
-	}
-	$conn->close();
+function getContacts($conn, $inData)
+{
+    $userID = $inData['userID'];
 
+    if ($conn->connect_error) {
+        returnWithError($conn->connect_error);
+    } else {
+        $result        = $conn->query("SELECT * FROM Contacts WHERE userID=$userID");
+        $count         = 0;
+        $searchResults = "";
 
-	/**
-	 * Reads MySQL database login information through a 'secrets' file
-	 *
-	 *  @return array (array containing database login information)
-	 */
-	function readSecrets()
-	{
-		$secretsFile = fopen("../secrets", "r");
+        while ($row = $result->fetch_assoc()) {
+            if ($count > 0) {
+                $searchResults .= ",";
+            }
+            $count++;
 
-		while (!feof($secretsFile)) {
-			$secretsString = fgets($secretsFile);
-		}
+            // Column information for Contacts
+            $id           = $row['id'];
+            $firstName    = $row['firstName'];
+            $lastName     = $row['lastName'];
+            $phoneNumber  = $row['phoneNumber'];
+            $emailAddress = $row['emailAddress'];
 
-		fclose($secretsFile);
+            $searchResults .= '{"contactID":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","phoneNumber":' . $phoneNumber . ',"emailAddress":"' . $emailAddress . '"}';
+        }
 
-		$secretsArray = explode(",", $secretsString);
+        returnWithInfo($searchResults);
+    }
+}
 
-		$secrets['host'] = $secretsArray[0];
-		$secrets['username'] = $secretsArray[1];
-		$secrets['passwd'] = $secretsArray[2];
-		$secrets['dbname'] = $secretsArray[3];
+/**
+ * Reads MySQL database login information through a 'secrets' file
+ *
+ *  @return array (array containing database login information)
+ */
+function readSecrets()
+{
+    $secretsFile = fopen("../secrets", "r");
 
-		return $secrets;
-	}
+    while (!feof($secretsFile)) {
+        $secretsString = fgets($secretsFile);
+    }
 
-	function getRequestInfo()
-	{
-		return json_decode(file_get_contents('php://input'), true);
-	}
+    fclose($secretsFile);
 
-	function sendResultInfoAsJson($obj)
-	{
-		header('Content-type: application/json');
-		header('Access-Control-Allow-Origin: *');
-		header('Access-Control-Allow-Headers: Content-Type, origin');
-		echo $obj;
-	}
+    $secretsArray = explode(",", $secretsString);
 
-	function returnWithError($err)
-	{
-		$retValue = '{"error":"' . $err . '"}';
-		sendResultInfoAsJson($retValue);
-	}
+    $secrets['host']     = $secretsArray[0];
+    $secrets['username'] = $secretsArray[1];
+    $secrets['passwd']   = $secretsArray[2];
+    $secrets['dbname']   = $secretsArray[3];
 
-	function returnWithInfo( $searchResults )
-	{
-		$retValue = '{"results":[' . $searchResults . '],"error":""}';
-		sendResultInfoAsJson($retValue);
-	}
-?>
+    return $secrets;
+}
+
+function getRequestInfo()
+{
+    return json_decode(file_get_contents('php://input'), true);
+}
+
+function sendResultInfoAsJson($obj)
+{
+    header('Content-type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Headers: Content-Type, origin');
+    echo $obj;
+}
+
+function returnWithError($err)
+{
+    $retValue = '{"error":"' . $err . '"}';
+    sendResultInfoAsJson($retValue);
+}
+
+function returnWithInfo($searchResults)
+{
+    $retValue = '{"results":[' . $searchResults . '],"error":""}';
+    sendResultInfoAsJson($retValue);
+}

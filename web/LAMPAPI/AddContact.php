@@ -1,76 +1,75 @@
 <?php
-	$inData = getRequestInfo();
 
-	$firstName = $inData["firstName"];
-	$lasttName = $inData["lastName"];
-	$phoneNumber = $inData["phoneNumber"];
-	$emailAddress = $inData["emailAddress"];
-	$userID = $inData["userID"];
+$inData = getRequestInfo();
 
-	$secrets = readSecrets();
-	$conn = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
+$firstName    = $inData["firstName"];
+$lasttName    = $inData["lastName"];
+$phoneNumber  = $inData["phoneNumber"];
+$emailAddress = $inData["emailAddress"];
+$userID       = $inData["userID"];
 
-	if ($conn->connect_error)
-	{
-		returnWithError( $conn->connect_error );
-	}
-	else
-	{
-		$sql = "INSERT into Contacts (firstName,lastName,phoneNumber,emailAddress,userID) VALUES ('" . $firstName .  "','" . $lasttName . "'," . $phoneNumber . ",'" . $emailAddress . "'," . $userID . ")";
-		error_log($sql);
+$secrets = readSecrets();
+$conn    = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
 
-		if( $result = $conn->query($sql) != TRUE )
-		{
-			returnWithError( $conn->error );
-		}
-		else
-		{
-			returnWithError("");
-		}
-	}
-	$conn->close();
+insertContact($conn, $inData);
 
-	function getRequestInfo()
-	{
-		return json_decode(file_get_contents('php://input'), true);
-	}
+$conn->close();
 
-	function sendResultInfoAsJson( $obj )
-	{
-		header('Content-type: application/json');
-		header('Access-Control-Allow-Origin: *');
-		header('Access-Control-Allow-Headers: Content-Type, origin');
-		echo $obj;
-	}
+function insertContact($conn, $inData)
+{
+    if ($conn->connect_error) {
+        returnWithError($conn->connect_error);
+    } else {
+        $result = $conn->query("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES ('$firstName', '$lastName', '$phoneNumber', '$emailAddress', '$userID')");
 
-	function returnWithError( $err )
-	{
-		$retValue = '{"error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
-	}
+        if (!$result) {
+            returnWithError($conn->error);
+        } else {
+            returnWithError("");
+        }
+    }
+}
 
-	/**
-	 * Reads MySQL database login information through a 'secrets' file
-	 *
-	 *  @return array (array containing database login information)
-	 */
-	function readSecrets()
-	{
-		$secretsFile = fopen("../secrets", "r");
+function getRequestInfo()
+{
+    return json_decode(file_get_contents('php://input'), true);
+}
 
-		while (!feof($secretsFile)) {
-			$secretsString = fgets($secretsFile);
-		}
+function sendResultInfoAsJson($obj)
+{
+    header('Content-type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Headers: Content-Type, origin');
+    echo $obj;
+}
 
-		fclose($secretsFile);
+function returnWithError($err)
+{
+    $retValue = '{"error":"' . $err . '"}';
+    sendResultInfoAsJson($retValue);
+}
 
-		$secretsArray = explode(",", $secretsString);
+/**
+ * Reads MySQL database login information through a 'secrets' file
+ *
+ *  @return array (array containing database login information)
+ */
+function readSecrets()
+{
+    $secretsFile = fopen("../secrets", "r");
 
-		$secrets['host'] = $secretsArray[0];
-		$secrets['username'] = $secretsArray[1];
-		$secrets['passwd'] = $secretsArray[2];
-		$secrets['dbname'] = $secretsArray[3];
+    while (!feof($secretsFile)) {
+        $secretsString = fgets($secretsFile);
+    }
 
-		return $secrets;
-	}
-?>
+    fclose($secretsFile);
+
+    $secretsArray = explode(",", $secretsString);
+
+    $secrets['host']     = $secretsArray[0];
+    $secrets['username'] = $secretsArray[1];
+    $secrets['passwd']   = $secretsArray[2];
+    $secrets['dbname']   = $secretsArray[3];
+
+    return $secrets;
+}

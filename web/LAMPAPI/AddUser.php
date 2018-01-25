@@ -1,8 +1,6 @@
 <?php
-$inData = getRequestInfo();
 
-$username = protectInjection($inData["username"]);
-$password = $inData["password"];
+$inData = getRequestInfo();
 
 $secrets = readSecrets();
 $conn    = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
@@ -11,8 +9,11 @@ sendQuery($conn);
 
 $conn->close();
 
-function sendQuery($conn)
+function sendQuery($conn, $inData)
 {
+    $username = protectInjection($inData["username"]);
+    $password = $inData["password"];
+
     if ($conn->connect_error) {
         returnWithError($conn->connect_error);
     } else if (strlen($username) > 60) {

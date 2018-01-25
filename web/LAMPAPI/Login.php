@@ -1,6 +1,6 @@
 <?php
+
 $inData = getRequestInfo();
-$id     = 0;
 
 $secrets = readSecrets();
 $conn    = new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
@@ -17,13 +17,12 @@ function checkLoginInfo($conn, $inData)
         $username = protectInjection($inData['login']);
         $password = $inData['password'];
 
-        $result = $conn->query("SELECT * FROM Users WHERE username='" . $username . "'");
+        $result = $conn->query("SELECT * FROM Users WHERE username='$username'");
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             if (password_verify($password, $row['password'])) {
-                $id = $row['id'];
-                returnWithInfo($id);
+                returnWithInfo($row['id']);
             } else {
                 returnWithError("Password incorrect");
             }
