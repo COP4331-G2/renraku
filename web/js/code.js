@@ -48,7 +48,9 @@ function doLogin()
         hideOrShow( "accessUIDiv", true);
 
         // Fill the user's contacts table
-        fillTable();
+        // This also currently sets the userID for fillTable()
+        // TODO: Needs to be fixed
+        fillTable(jsonObject.results);
     } catch(e) {
         // If there is an error parsing the JSON, attempt to set the HTML login result message
         document.getElementById("loginResult").innerHTML = e.message;
@@ -84,10 +86,9 @@ function hideOrShow(elementId, showState)
     document.getElementById(elementId).style.display = showState ? "block" : "none";
 }
 
-function fillTable()
+function fillTable(userID)
 {
-    var id = 1;
-    var jsonPayload = '{"function": "getContacts", "userID" : "' + id + '"}';
+    var jsonPayload = '{"function": "getContacts", "userID" : "' + userID + '"}';
     console.log('hey there im in the function');
     var xhr = new XMLHttpRequest();
     xhr.open("POST", API, true);
