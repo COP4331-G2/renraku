@@ -30,22 +30,22 @@ function getRequestInfo()
     return json_decode(file_get_contents('php://input'), true);
 }
 
-function sendResultInfoAsJson($obj)
+function sendResultInfoAsJson($json)
 {
     header('Content-type: application/json');
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Headers: Content-Type, origin');
-    echo $obj;
+    echo $json;
 }
 
-function returnWithError($err)
+function returnWithError($error)
 {
-    $retValue = "{\"error\": \"$err\"}";
-    sendResultInfoAsJson($retValue);
+    $json = json_encode(['error' => $error]);
+    sendResultInfoAsJson($json);
 }
 
 function returnWithInfo($searchResults)
 {
-    $retValue = '{"results":[' . $searchResults . ']}';
-    sendResultInfoAsJson($retValue);
+    $json = json_encode(['results' => $searchResults]);
+    sendResultInfoAsJson($json);
 }

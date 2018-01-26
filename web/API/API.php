@@ -178,24 +178,24 @@ function getContacts($conn, $inData)
     } else {
         $result        = $conn->query("SELECT * FROM Contacts WHERE userID=$userID");
         $count         = 0;
-        $searchResults = "";
+        $searchResults = [];
 
+        // Iterate through all found contacts to setup their information
         while ($row = $result->fetch_assoc()) {
-            if ($count > 0) {
-                $searchResults .= ",";
-            }
-            $count++;
-
             // Column information for Contacts
-            $id           = $row['id'];
-            $firstName    = $row['firstName'];
-            $lastName     = $row['lastName'];
-            $phoneNumber  = $row['phoneNumber'];
-            $emailAddress = $row['emailAddress'];
+            $array = [
+                'contactId'    => $row['id'],
+                'firstName'    => $row['firstName'],
+                'lastName'     => $row['lastName'],
+                'phoneNumber'  => $row['phoneNumber'],
+                'emailAddress' => $row['emailAddress'],
+            ];
 
-            $searchResults .= '{"contactID":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","phoneNumber":' . $phoneNumber . ',"emailAddress":"' . $emailAddress . '"}';
+            // Append this information to the searchResults array
+            $searchResults[] = $array;
         }
 
+        // Return the built searchResults array
         returnWithInfo($searchResults);
     }
 }
