@@ -61,8 +61,11 @@ function doLogin()
  */
 function doLogout()
 {
+    // Hide the post-login HTML elements
     hideOrShow("loggedInDiv", false);
     hideOrShow("accessUIDiv", false);
+
+    // Show the login HTML elements
     hideOrShow("loginDiv", true);
 }
 
@@ -74,16 +77,11 @@ function doLogout()
  */
 function hideOrShow(elementId, showState)
 {
-    var vis = "visible";
-    var dis = "block";
+    // Set the visibility based on showState
+    document.getElementById(elementId).style.visibility = showState ? "visible" : "hidden";
 
-    if(!showState) {
-        vis = "hidden";
-        dis = "none";
-    }
-
-    document.getElementById(elementId).style.visibility = vis;
-    document.getElementById(elementId).style.display = dis;
+    // Set the display based on showState
+    document.getElementById(elementId).style.display = showState ? "block" : "none";
 }
 
 function fillTable()
