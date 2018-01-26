@@ -38,6 +38,12 @@ function sendResultInfoAsJson($json)
     echo $json;
 }
 
+function returnWithSuccess($successMessage)
+{
+    $json = json_encode(['success' => 'true', 'message' => $successMessage]);
+    sendResultInfoAsJson($json);
+}
+
 function returnWithError($error)
 {
     $json = json_encode(['error' => $error]);

@@ -13,7 +13,12 @@ function doLogin()
     document.getElementById("loginResult").innerHTML = "";
 
     // Setup the JSON payload to send to the API
-    var jsonPayload = '{"function": "loginAttempt", "username": "' + username + '", "password": "' + password + '"}';
+    var jsonPayload = {
+        function: "loginAttempt",
+        username: username,
+        password: password,
+    };
+    jsonPayload = JSON.stringify(jsonPayload);
     console.log("JSON Payload: " + jsonPayload);
 
     // Setup the HMLHttpRequest
@@ -25,7 +30,7 @@ function doLogin()
     try {
         // Send the XMLHttpRequest
         xhr.send(jsonPayload);
-        console.log("***" + xhr.responseText);
+        console.log("JSON Response: " + xhr.responseText);
 
         // Parse the JSON returned from the request
         var jsonObject = JSON.parse(xhr.responseText);
@@ -87,7 +92,14 @@ function hideOrShow(elementId, showState)
 
 function fillTable(userID)
 {
-    var jsonPayload = '{"function": "getContacts", "userID" : "' + userID + '"}';
+    // Setup the JSON payload to send to the API
+    var jsonPayload = {
+        function: "getContacts",
+        userID: userID,
+    };
+    jsonPayload = JSON.stringify(jsonPayload);
+    console.log("JSON Payload: " + jsonPayload);
+
     console.log('hey there im in the function');
     var xhr = new XMLHttpRequest();
     xhr.open("POST", API, true);
