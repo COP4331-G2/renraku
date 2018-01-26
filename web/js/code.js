@@ -92,7 +92,7 @@ function fillTable()
     var jsonPayload = '{"function": "getContacts", "userID" : "' + id + '"}';
     console.log('hey there im in the function');
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
+    xhr.open("POST", API, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
     console.log('hey there im in the functio12n');
     try {
