@@ -49,7 +49,6 @@ function doLogin()
 
         // Fill the user's contacts table
         // This also currently sets the userID for fillTable()
-        // TODO: Needs to be fixed
         fillTable(jsonObject.results);
     } catch(e) {
         // If there is an error parsing the JSON, attempt to set the HTML login result message
