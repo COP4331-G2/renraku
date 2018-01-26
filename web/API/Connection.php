@@ -36,7 +36,12 @@ function sendResultInfoAsJson($json)
     header('Content-type: application/json');
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Headers: Content-Type, origin');
+
+    // Send the JSON as a string back to the client-side
     echo $json;
+
+    // Ensure that the PHP server-side stops here for this request
+    die;
 }
 
 function returnWithSuccess($successMessage)
