@@ -1,6 +1,6 @@
 <?php
 
-require 'Connection.php';
+require_once 'Connection.php';
 
 $inData = getRequestInfo();
 
@@ -32,31 +32,6 @@ function checkLoginInfo($conn, $inData)
             returnWithError("No Records Found");
         }
     }
-}
-
-function getRequestInfo()
-{
-    return json_decode(file_get_contents('php://input'), true);
-}
-
-function sendResultInfoAsJson($obj)
-{
-    header('Content-type: application/json');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Headers: Content-Type, origin');
-    echo $obj;
-}
-
-function returnWithError($err)
-{
-    $retValue = '{"id":-1,"error":"' . $err . '"}';
-    sendResultInfoAsJson($retValue);
-}
-
-function returnWithInfo($id)
-{
-    $retValue = '{"id":' . $id . '}';
-    sendResultInfoAsJson($retValue);
 }
 
 function protectInjection($string)
