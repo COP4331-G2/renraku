@@ -4,6 +4,7 @@
  * Reads MySQL database login information through a 'secrets' file
  *
  *  @return array (array containing database login information)
+ *
  */
 function readSecrets()
 {

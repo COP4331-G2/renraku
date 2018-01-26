@@ -6,6 +6,7 @@ establishConnection();
 
 /**
  * Retrieve JSON and establish MySQL connection
+ *
  */
 function establishConnection()
 {
@@ -127,11 +128,20 @@ function createUser($conn, $inData)
 }
 
 /**
- * Delete a user account
+ * Delete a user account (and all associated contacts)
+ *
+ * @param mysqli $conn MySQL connection instance
+ * @param object $inData Decoded JSON stdClass object
+ *
  */
-function deleteUser()
+function deleteUser($conn, $inData)
 {
-    // Not yet implemented
+    /* Not yet implemented */
+
+    // Will need to get the user's id
+    // Then iterate through all contacts and delete them (via deleteContact())
+    // Then delete the user itself
+
 }
 
 /**
@@ -249,6 +259,7 @@ function getContacts($conn, $inData)
  * @param string $string A SQL-formatted string
  *
  * @return string
+ *
  */
 function protectAgainstInjection($string)
 {
