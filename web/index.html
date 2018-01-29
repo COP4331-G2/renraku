@@ -142,14 +142,13 @@
         <div class="card">
           <div class="card-header">
               <form class="form-inline mr-sm-2 my-2 my-lg-0">
-                  <input type="text" class="form-control col-sm-6" id="searchText" placeholder="Search Contacts" oninput="searchContacts();">
-
-                  <span class="col-md-2" id="contactSearchResult"></span>
-                  <button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger my-2 my-sm-0 mr-2 col-md-2">Delete Contacts</button>
-                  <button type="button" id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();" class="btn btn-danger col-md-2">Confirm Delete</button>
-                  <button type="button" class="btn btn-primary col-md-2" data-toggle="modal" data-target="#myModal">
+                  <input type="text" class="form-control col-sm-6 mx-2" id="searchText" placeholder="Search Contacts" oninput="searchContacts();" >              
+                  <button type="button" class="btn btn-primary col-md-2 mx-2" data-toggle="modal" data-target="#myModal">
                     Add New Contact
                   </button>
+                  <button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger mx-2">Delete Contacts</button>
+                  <button type="button" id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();" class="btn btn-danger mx-2">Confirm Delete</button>
+
 
               </form>
           </div>
