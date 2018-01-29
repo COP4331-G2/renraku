@@ -225,6 +225,40 @@ function getContacts($dbConnection, $jsonPayload)
     returnSuccess('Contacts found.', $searchResults);
 }
 
+function searchContacts($conn, $inData)
+{
+    $userID = $inData['userID'];
+    $searchOption = $inData['searchOption'];
+    $searchFor = $inData['searchFor'];
+
+    if ($conn->connect_error) {
+        returnWithError($conn->connect_error);
+    } else {
+        $result        = $conn->query("SELECT * FROM Contacts WHERE userID=$userID AND $searchOption= '$searchFor' ");
+        $count         = 0;
+        $searchResults = "";
+
+        while ($row = $result->fetch_assoc()) {
+            if ($count > 0) {
+                $searchResults .= ",";
+            }
+            $count++;
+
+            // Column information for Contacts
+            $id           = $row['id'];
+            $firstName    = $row['firstName'];
+            $lastName     = $row['lastName'];
+            $phoneNumber  = $row['phoneNumber'];
+            $emailAddress = $row['emailAddress'];
+
+            $searchResults .= '{"contactID":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","phoneNumber":' . $phoneNumber . ',"emailAddress":"' . $emailAddress . '"}';
+        }
+
+        returnWithInfo($searchResults);
+    }
+
+}
+
 /**
  * Remove single-quotes and semicolons from a string to protect against SQL injection
  *

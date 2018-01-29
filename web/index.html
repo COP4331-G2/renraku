@@ -21,40 +21,33 @@
 <div id="loggedInDiv" style="display:none; visibility:hidden;">
   <button type="button" id="logoutButton" class="buttons" onclick="doLogout();"> Log Out </button>
 </div>
-<div id="accessUIDiv" style="display:none; visibility:hidden;">
-  <br />
-
-  Search for Color: <input type="text" id="searchText">
-  <button type="button" id="searchColorButton" class="buttons" onclick="searchColor();"> Search Color </button><br />
-  <span id="colorSearchResult"></span>
-  <select id="colorList" style="display:none; visibility:hidden;">
-    <!-- <option value="volvo">Volvo</option> -->
-  </select><br /><br />
-
-  Add Color: <input type="text" id="colorText">
-  <button type="button" id="addColorButton" class="buttons" onclick="addColor();"> Add Color </button><br />
-  <span id="colorAddResult"></span>
-</div>
 <div id="postLoginDiv">
   <div id="searchUIDiv">
-      <input type="text" name="contact"/>
-      <input type="button" name="submit" value="submit"/>
+      <input id="searchBox" type="text" name="contact"/>
+      <input id="searchBoxSubmit" type="button" name="submit" onclick="searchContacts();"value="submit"/>
+      First Name<input id="firstName" class="searchByRadioButton" type="radio" name="contact"/>
+      Last Name<input id="lastName" class="searchByRadioButton" type="radio" name="contact"/>
+      Phone Number<input id="phoneNumber" class="searchByRadioButton" type="radio" name="contact"/>
+      Email Address<input id="emailAddress" class="searchByRadioButton" type="radio" name="contact"/>
+      <p id="searchingContactsErrorMessage"></p>
   </div>
   <div id="tableUIDiv">
     <table class="table-bordered table-condensed" id="contactsTable">
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Second Name</th>
-          <th>Number</th>
-          <th>Email Address</th>
-        </tr>
-      </thead>
     </table>
   </div>
   <div id="tableControlUIDiv">
-    <input type="button" value="Add"/>
-    <input type="button" value="Delete"/>
+    <input type="button" value="Add" onclick="showAddContactDiv();"/>
+    <input id="showDeleteMarks" type="button" value="Delete" onclick="selectContactsToDelete();"/>
+    <input id="confirmDelete" style="visibility: hidden; display: none;" type="button" value="confirm Delete" onclick="deleteContacts();"/>
+    <p id="deletingContactsErrorMessage"></p>
+  </div>
+  <div id="addContactUIDiv" style="display:none; visibility:hidden;">
+    <input id="firstN" type="text" value="heythere"/>
+    <input id="lastN" type="text"/>
+    <input id="phoneN" type="text"/>
+    <input id="email" type="text"/>
+    <input id="confirmAdd" type="button" onclick="addContact();" value="Confirm"/>
+    <p id="addingContactsErrorMessage"></p>
   </div>
 </div>
 </body>
