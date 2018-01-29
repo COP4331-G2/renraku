@@ -165,7 +165,7 @@ function addContact($dbConnection, $jsonPayload)
 {
     // Get the contact information from the JSON payload
     $firstName    = $jsonPayload['firstName'];
-    $lasttName    = $jsonPayload['lastName'];
+    $lastName     = $jsonPayload['lastName'];
     $phoneNumber  = $jsonPayload['phoneNumber'];
     $emailAddress = $jsonPayload['emailAddress'];
     $userID       = $jsonPayload['userID'];
@@ -226,6 +226,38 @@ function getContacts($dbConnection, $jsonPayload)
 
     // MySQL query to get ALL contacts associated with the user in the database
     $result = $dbConnection->query("SELECT * FROM Contacts WHERE userID=$userID");
+
+    // Setup an array to store multiple contact information
+    $searchResults = [];
+
+    // Iterate through all found contacts to store their information
+    while ($row = $result->fetch_assoc()) {
+        // Column information for a contact
+        $contactInformation = [
+            'contactId'    => $row['id'],
+            'firstName'    => $row['firstName'],
+            'lastName'     => $row['lastName'],
+            'phoneNumber'  => $row['phoneNumber'],
+            'emailAddress' => $row['emailAddress'],
+        ];
+
+        // Append this information to the searchResults array
+        $searchResults[] = $contactInformation;
+    }
+
+    // Return the built searchResults array prepared for a JSON response
+    returnSuccess('Contacts found.', $searchResults);
+}
+
+function searchContacts($dbConnection, $jsonPayload)
+{
+    // Get the user's id from JSON payload
+    $userID       = $jsonPayload['userID'];
+    $searchOption = $jsonPayload['searchOption'];
+    $searchFor    = $jsonPayload['searchFor'];
+
+    // MySQL query to get ALL contacts associated with the user in the database
+    $result = $dbConnection->query("SELECT * FROM Contacts WHERE userID=$userID AND $searchOption= '$searchFor' ");
 
     // Setup an array to store multiple contact information
     $searchResults = [];
