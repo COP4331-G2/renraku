@@ -338,7 +338,7 @@ function buildTableData(data)
     }
     for (i = 0; i < data.results.length; i++) {
         var tableRow = document.createElement('tr');
-        tableRow.id = data.results[i].contactID;
+        tableRow.id = data.results[i].contactId;
         var firstName = document.createElement('td');
         firstName.innerHTML = data.results[i].firstName;
         var lastName = document.createElement('td');
