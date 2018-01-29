@@ -232,7 +232,7 @@ function searchContacts()
 {
   var typedSearch = document.getElementById("searchBox").value;
   var filteredData = tableData.filter(function (item) {
-      return (string.stringContains(item.contactId, typedSearch) || string.stringContains(item.firstName, typedSearch) || string.stringContains(item.lastName, typedSearch) || string.stringContains(item.phoneNumber, typedSearch) || string.stringContains(item.emailAddress, typedSearch));
+      return (stringContains(item.contactId, typedSearch) || stringContains(item.firstName, typedSearch) || stringContains(item.lastName, typedSearch) || stringContains(item.phoneNumber, typedSearch) || stringContains(item.emailAddress, typedSearch));
   });
   buildTableHeader();
   buildTableData(filteredData);
