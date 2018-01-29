@@ -146,7 +146,6 @@ function addContact()
   hideOrShow("addContactUIDiv", false);
 
   console.log(jsonPayload);
-
 }
 
 function CallServerSide(jsonPayload)
