@@ -247,6 +247,64 @@ function deleteContacts()
   return false;
 }
 
+function doCreateAccount()
+{
+    var username = document.getElementById("createUser").value;
+    var password = document.getElementById("createPassword").value;
+    var confirm = document.getElementById("confirmPassword").value;
+
+    // Ensure that the HTML login result message is blank
+    // document.getElementById("createResult").innerHTML = "";
+
+    if(password !== confirm)
+    {
+        // document.getElementById("createResult").innerHTML = "Passwords don't match";
+        return;
+    }
+
+    var jsonPayload = {
+        function: "createUser",
+        username: username,
+        password: password,
+    }
+
+    jsonPayload = JSON.stringify(jsonPayload);
+    console.log("JSON Payload: " + jsonPayload);
+
+    //setup
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", API, false);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try{
+        //send the xml request
+        xhr.send(jsonPayload);
+        console.log("*" + xhr.responseText);
+
+        var jsonObject = JSON.parse(xhr.responseText);
+
+        if(jsonObject.error){
+            // document.getElementById("createResult").innerHTML = jsonObject.error;
+            return;
+        }
+
+        //make forms blank
+        document.getElementById("createUser").innerHTML = "";
+        document.getElementById("createPassword").innerHTML = "";
+        document.getElementById("confirmPassword").innerHTML = "";
+
+        //hide sign up
+        hideOrShow("signupDiv",false);
+
+        //go back to login page
+        // hideOrShow("homepageWelcomeDiv",true);
+
+    }   catch(e) {
+        // If there is an error parsing the JSON, attempt to set the HTML login result message
+        document.getElementById("loginResult").innerHTML = e.message;
+    }
+}
+
 function searchContacts()
 {
   var typedSearch = document.getElementById("searchText").value;
@@ -324,15 +382,22 @@ function buildTableData(data)
         var emailAddress = document.createElement('td');
         emailAddress.innerHTML = data[i].emailAddress;
         var deleteButton = document.createElement('input');
+        var deleteData = document.createElement('td');
+        var deleteDiv = document.createElement('div');
+        deleteDiv.className = "checkbox checkbox-success";
+
         deleteButton.type = "checkbox";
         deleteButton.style.visibility = "hidden";
         deleteButton.style.display = "none";
-        deleteButton.className = "deleteButton";
+        deleteButton.className = "deleteButton styled ml-3";
+        deleteDiv.appendChild(deleteButton);
+        deleteData.appendChild(deleteDiv);
+
         tableRow.appendChild(firstName);
         tableRow.appendChild(lastName);
         tableRow.appendChild(phoneNumber);
         tableRow.appendChild(emailAddress);
-        tableRow.appendChild(deleteButton);
+        tableRow.appendChild(deleteData);
         tud.appendChild(tableRow);
     }
 }
