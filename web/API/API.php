@@ -3,14 +3,14 @@
 // Add file with connection-related functions
 require 'Connection.php';
 
-// Receive decoded JSON info from client
-$inData = getRequestInfo();
+// Receive decoded JSON payload from client
+$jsonPayload = getJSONPayload();
 
 // Establish a connection to the database
-$conn = establishConnection();
+$dbConnection = establishConnection();
 
 // Call the client-requested function
-callVariableFunction($conn, $inData);
+callVariableFunction($dbConnection, $jsonPayload);
 
 /* *************** */
 /* Functions Below */
@@ -19,38 +19,38 @@ callVariableFunction($conn, $inData);
 /**
  * Call a variable function passed as a string from the client-side
  *
- * @param mysqli $conn MySQL connection instance
- * @param object $inData Decoded JSON stdClass object
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
  */
-function callVariableFunction($conn, $inData)
+function callVariableFunction($dbConnection, $jsonPayload)
 {
-    // Get function name (as string) from the JSON information
-    $function = $inData['function'];
+    // Get function name (as string) from the JSON payload
+    $function = $jsonPayload['function'];
 
     // Ensure that the function exists and is callable
     if (is_callable($function)) {
         // Use the JSON payload 'function' string field to call a PHP function
-        $function($conn, $inData);
+        $function($dbConnection, $jsonPayload);
     } else {
-        // If the function is not callable, return a error as JSON string
-        returnWithError("JSON payload tried to call undefined PHP function $function().");
+        // If the function is not callable, return a JSON error response
+        returnError("JSON payload tried to call undefined PHP function $function().");
     }
 }
 
 /**
  * Verify username/password information and (perhaps) login to a user's account
  *
- * @param mysqli $conn MySQL connection instance
- * @param object $inData Decoded JSON stdClass object
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
  */
-function loginAttempt($conn, $inData)
+function loginAttempt($dbConnection, $jsonPayload)
 {
-    // Get the username and password from the JSON information
-    $username = protectAgainstInjection($inData['username']);
-    $password = $inData['password'];
+    // Get the username and password from the JSON payload
+    $username = protectAgainstInjection($jsonPayload['username']);
+    $password = $jsonPayload['password'];
 
     // MySQL query to check if the username exists in the database
-    $result = $conn->query("SELECT * FROM Users WHERE username='$username'");
+    $result = $dbConnection->query("SELECT * FROM Users WHERE username='$username'");
 
     // Verify if the username exists
     if ($result->num_rows > 0) {
@@ -61,62 +61,62 @@ function loginAttempt($conn, $inData)
         // Verify if the password is correct
         if (password_verify($password, $row['password'])) {
             // If the password is correct...
-            // Return the info as a JSON string
-            returnWithResults($row['id']);
+            // Return the JSON success response (including user's id)
+            returnSuccess('Login successful', $row['id']);
         } else {
             // If the password isn't correct...
-            // Return an error as a JSON string
-            returnWithError("Password incorrect.");
+            // Return a JSON error response
+            returnError("Password incorrect.");
         }
     } else {
         // If the username doesn't exist...
-        // Return an error as a JSON string
-        returnWithError("Username not found.");
+        // Return a JSON error response
+        returnError("Username not found.");
     }
 }
 
 /**
  * Create a new user account
  *
- * @param mysqli $conn MySQL connection instance
- * @param object $inData Decoded JSON stdClass object
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
  */
-function createUser($conn, $inData)
+function createUser($dbConnection, $jsonPayload)
 {
-    // Get the username and password from the JSON information
-    $username = protectAgainstInjection($inData["username"]);
-    $password = $inData["password"];
+    // Get the username and password from the JSON payload
+    $username = protectAgainstInjection($jsonPayload['username']);
+    $password = $jsonPayload['password'];
 
     // Check for various error-inducing situations
     if (strlen($username) > 60) {
-        returnWithError("Username cannot exceed 60 characters.");
+        returnError('Username cannot exceed 60 characters.');
     } else if (strlen($username) <= 0) {
-        returnWithError("Username cannot be empty.");
+        returnError('Username cannot be empty.');
     } else if (strlen($password) <= 0) {
-        returnWithError("Password cannot be empty.");
+        returnError('Password cannot be empty.');
     } else {
         // MySQL query to check if a username already exists in the database
-        $result = $conn->query("SELECT * FROM Users WHERE username='$username'");
+        $result = $dbConnection->query("SELECT * FROM Users WHERE username='$username'");
 
         // If a username already exists...
-        // Return an error as a JSON string
+        // Return a JSON error response
         if ($result->num_rows > 0) {
-            returnWithError("Username already exists!");
+            returnError('Username already exists.');
         }
 
         // Encrypt the password (using PHP defaults)
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // MySQL query to add the username/password to the database
-        $result = $conn->query("INSERT INTO Users (username, password) VALUES ('$username', '$hashedPassword')");
+        // MySQL query to add the username and password into the database
+        $result = $dbConnection->query("INSERT INTO Users (username, password) VALUES ('$username', '$hashedPassword')");
 
         // Check to see if the insertion was successful...
         if ($result) {
-            // If successful, return success message as JSON string
-            returnWithSuccess('User created.');
+            // If successful, return JSON success response
+            returnSuccess('User created.');
         } else {
-            // If not successful, return error as JSON string
-            returnWithError($conn->error);
+            // If not successful, return JSON error response
+            returnError($dbConnection->error);
         }
     }
 }
@@ -124,10 +124,10 @@ function createUser($conn, $inData)
 /**
  * Delete a user account (and all associated contacts)
  *
- * @param mysqli $conn MySQL connection instance
- * @param object $inData Decoded JSON stdClass object
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
  */
-function deleteUser($conn, $inData)
+function deleteUser($dbConnection, $jsonPayload)
 {
     /* Not yet implemented */
 
@@ -140,68 +140,68 @@ function deleteUser($conn, $inData)
 /**
  * Add a contact to a user's account
  *
- * @param mysqli $conn MySQL connection instance
- * @param object $inData Decoded JSON stdClass object
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
  */
-function addContact($conn, $inData)
+function addContact($dbConnection, $jsonPayload)
 {
-    // Get the contact information from the JSON information
-    $firstName    = $inData["firstName"];
-    $lasttName    = $inData["lastName"];
-    $phoneNumber  = $inData["phoneNumber"];
-    $emailAddress = $inData["emailAddress"];
-    $userID       = $inData["userID"];
+    // Get the contact information from the JSON payload
+    $firstName    = $jsonPayload["firstName"];
+    $lasttName    = $jsonPayload["lastName"];
+    $phoneNumber  = $jsonPayload["phoneNumber"];
+    $emailAddress = $jsonPayload["emailAddress"];
+    $userID       = $jsonPayload["userID"];
 
     // MySQL query to add the contact to the database
-    $result = $conn->query("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES ('$firstName', '$lastName', '$phoneNumber', '$emailAddress', '$userID')");
+    $result = $dbConnection->query("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES ('$firstName', '$lastName', '$phoneNumber', '$emailAddress', '$userID')");
 
     // Check to see if the insertion was successful...
     if ($result) {
         // If successful, return success message as JSON string
-        returnWithSuccess('Contact created.');
+        returnSuccess('Contact created.');
     } else {
         // If not successful, return error as JSON string
-        returnWithError($conn->error);
+        returnError($dbConnection->error);
     }
 }
 
 /**
  * Delete a contact from a user's account
  *
- * @param mysqli $conn MySQL connection instance
- * @param object $inData Decoded JSON stdClass object
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
  */
-function deleteContact($conn, $inData)
+function deleteContact($dbConnection, $jsonPayload)
 {
-    // Get contact's id from JSON information
-    $contactID = $inData["id"];
+    // Get the contact's id from JSON payload
+    $contactID = $jsonPayload["id"];
 
     // MySQL query to delete the contact from the database
-    $result = $conn->query("DELETE FROM Contacts WHERE id='$contactID'");
+    $result = $dbConnection->query("DELETE FROM Contacts WHERE id=$contactID");
 
     // Check to see if the deletion was successful...
     if ($result) {
-        // If successful, return success message as JSON string
-        returnWithSuccess('Contact deleted.');
+        // If successful, return JSON success response
+        returnSuccess('Contact deleted.');
     } else {
-        // If not successful, return error as JSON string
-        returnWithError($conn->error);
+        // If not successful, return JSON error response
+        returnError($dbConnection->error);
     }
 }
 
 /**
- * Get all contacts from a user's account foratted as a JSON string
+ * Get all contacts from a user's account prepared for a JSON repsonse
  *
- * @param mysqli $conn MySQL connection instance
- * @param object $inData Decoded JSON stdClass object
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
  */
-function getContacts($conn, $inData)
+function getContacts($dbConnection, $jsonPayload)
 {
-    // Get user's id from JSON information
-    $userID = $inData['userID'];
+    // Get the user's id from JSON payload
+    $userID = $jsonPayload['userID'];
 
     // MySQL query to get ALL contacts associated with the user in the database
-    $result = $conn->query("SELECT * FROM Contacts WHERE userID=$userID");
+    $result = $dbConnection->query("SELECT * FROM Contacts WHERE userID=$userID");
 
     // Setup an array to store multiple contact information
     $searchResults = [];
@@ -221,8 +221,8 @@ function getContacts($conn, $inData)
         $searchResults[] = $contactInformation;
     }
 
-    // Return the built searchResults array as a JSON string
-    returnWithResults($searchResults);
+    // Return the built searchResults array prepared for a JSON response
+    returnSuccess('Contacts found.', $searchResults);
 }
 
 /**

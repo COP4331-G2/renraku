@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Retrieve JSON and establish MySQL connection
+ * Establish MySQL connection
  */
 function establishConnection()
 {
@@ -12,22 +12,25 @@ function establishConnection()
     try {
         // Try to establish a connection
         // The @ suppresses warning messages so they don't print on the page
-        $conn = @new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
+        $dbConnection = @new mysqli($secrets['host'], $secrets['username'], $secrets['passwd'], $secrets['dbname']);
     } catch (Exception $e) {
         // If there is an exception (not warning or error), return exception message as JSON string
-        returnWithError('Connection exception caught: ' . $e->getMessage());
+        returnError('Connection exception caught.');
+
+        // This more verbose exception message can be enabled for debug purposes
+        returnError('Connection exception caught: ' . $e->getMessage());
     }
 
     // Check for a connection error
-    if ($conn->connect_error) {
-        // If there was a connection error, reutrn error as JSON string
-        returnWithError('Connection error.');
+    if ($dbConnection->connect_error) {
+        // If there was a connection error, reutrn error as JSON response
+        returnError('Connection error.');
 
-        // This more verbose error message version can be enabled for debug purposes
-        // returnWithError('Connection error: ' . $conn->connect_error);
+        // This more verbose error message can be enabled for debug purposes
+        // returnError('Connection error: ' . $dbConnection->connect_error);
     } else {
         // If the connection is good, return the connection object
-        return $conn;
+        return $dbConnection;
     }
 }
 
@@ -64,25 +67,25 @@ function readSecrets()
 }
 
 /**
- * Receive decoded JSON info from client-side application
+ * Receive decoded JSON payload from client-side application
  *
  *  @return array Array containing decoded JSON information
  */
-function getRequestInfo()
+function getJSONPayload()
 {
     // Get the JSON decoded string from the client-side application
-    $inData = json_decode(file_get_contents('php://input'), true);
+    $jsonPayload = json_decode(file_get_contents('php://input'), true);
 
     // Return the array
-    return $inData;
+    return $jsonPayload;
 }
 
 /**
- * Echo JSON information back to client-side application
+ * Echo JSON response back to client-side application
  *
  * @param string $json JSON encoded string
  */
-function sendResultInfoAsJson($json)
+function sendJSONResponse($jsonResponse)
 {
     // Header information (needed for Heroku)
     header('Content-type: application/json');
@@ -90,14 +93,14 @@ function sendResultInfoAsJson($json)
     header('Access-Control-Allow-Headers: Content-Type, origin');
 
     // Send the JSON as a string back to the client-side
-    echo $json;
+    echo $jsonReponse;
 
     // Grab the variable from global scope
-    global $conn;
+    global $dbConnection;
 
     // Ensure that the connection to the database (if available) is closed
-    if ($conn) {
-        $conn->close();
+    if ($dbConnection) {
+        $dbConnection->close();
     }
 
     // Ensure that the PHP server-side stops here for this request
@@ -105,43 +108,37 @@ function sendResultInfoAsJson($json)
 }
 
 /**
- * Setup an encoded JSON success string to send back to the client-side application
+ * Setup an encoded JSON response to send back to the client-side application
  *
  * @param string $successMessage String for success message
+ * @param string|array $results String or array for results
  */
-function returnWithSuccess($successMessage)
+function returnSuccess($message = '', $results = null)
 {
     // Encode the JSON information
-    $json = json_encode(['success' => 'true', 'message' => $successMessage]);
+    $json = json_encode([
+        'success' => true,
+        'message' => $message,
+        'results' => $results,
+    ]);
 
-    // Send JSON information back to the client-side application
-    sendResultInfoAsJson($json);
+    // Send JSON response back to the client-side application
+    sendJsendJSONResponseSON($json);
 }
 
 /**
- * Setup an encoded JSON error string to send back to the client-side application
+ * Setup an encoded JSON error response to send back to the client-side application
  *
- * @param string $error String for error message
+ * @param string $message String for error message
  */
-function returnWithError($error)
+function returnError($message)
 {
     // Encode the JSON information
-    $json = json_encode(['error' => $error]);
+    $json = json_encode([
+        'success' => false,
+        'error'   => $message,
+    ]);
 
     // Send JSON information back to the client-side application
-    sendResultInfoAsJson($json);
-}
-
-/**
- * Setup an encoded JSON info string to send back to the client-side application
- *
- * @param string|array $results String or array for results message
- */
-function returnWithResults($results)
-{
-    // Encode the JSON information
-    $json = json_encode(['results' => $results]);
-
-    // Send JSON information back to the client-side application
-    sendResultInfoAsJson($json);
+    sendJSONResponse($json);
 }

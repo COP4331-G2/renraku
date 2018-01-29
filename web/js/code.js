@@ -36,7 +36,7 @@ function doLogin()
         var jsonObject = JSON.parse(xhr.responseText);
 
         // If the returned JSON contains an error then set the HTML login result message
-        if (jsonObject.error) {
+        if (jsonObject.error || !jsonObject.success) {
             document.getElementById("loginResult").innerHTML = jsonObject.error;
             return;
         }
