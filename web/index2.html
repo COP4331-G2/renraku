@@ -1,7 +1,7 @@
 <html>
 
 <head>
-
+		<script type="text/javascript" src="js/code.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 	<!--<link href="css/styles.css" rel="stylesheet"> -->
@@ -17,8 +17,10 @@
 						->ID: loggedInButtonsDiv    					-->
 				<div id="loggedInButtonsDiv">
 					<form class="form-inline mr-sm-2 my-2 my-lg-0">
-						<button class="btn btn-primary my-2 my-sm-0 mr-2">Contact List</button>
-						<button class="btn btn-success my-2 my-sm-0 mr-2">Add Contact</button>
+						<button onclick="showAccessUIDiv()" class="btn btn-primary my-2 my-sm-0 mr-2">Contact List</button>
+						<button onclick="showAddContactDiv()" class="btn btn-success my-2 my-sm-0 mr-2">Add Contact</button>
+						<button onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger my-2 my-sm-0 mr-2">Delete Contacts</button>
+						<button id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();"class="btn btn-danger my-2 my-sm-0 mr-2">Confirm Delete</button>
 				</form>
 				</div>
 
@@ -30,7 +32,7 @@
 		 				->Visible on homepage, hidden while logged in
 						->ID: loginDiv	-->
 	  	<form class="form-inline mr-sm-2 my-2 my-lg-0" >
-				<div id="loginDiv" style="display:none; visibility:hidden;">
+				<div id="loginDiv">
 	    		<input class="form-control mr-sm-2 mr-sm-2" id="loginName" type="text" placeholder="Username" aria-label="Username">
 	    		<input class="form-control mr-sm-2" id="loginPassword" type="password" placeholder="Password" aria-label="Password">
 	    		<button class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" type="button" onclick="doLogin();" >Login</button>
@@ -40,7 +42,7 @@
 				<!-- div for logout button and "Logged in as" text
 						->Hidden on homepage, always shown while logged in
 					 	->id = loggedInDiv	-->
-				<div id="loggedinDiv" class="form-row">
+				<div id="loggedinDiv" class="form-row" style="display:none; visibility:hidden;">
 					<ul class="navbar-nav mr-2 mt-md-0 ">
 
 						<!-- span containing "logged in text"
@@ -61,7 +63,7 @@
 		<!-- Div for the homepage Welcome
 	 			->Shown when on homepage
 				->ID: homepageWelcomeDiv	-->
-		<div id="homepageWelcomeDiv" class="container-fluid mt-4 bg-light"style="display:none; visibility:hidden;">
+		<div id="homepageWelcomeDiv" class="container-fluid mt-4 bg-light" style="display:none; visibility:hidden;">
 			<div class="row">
 				<div class="col">
 					<h1 class="display-2 text-center">Welcome to</h1></br><h1 class="display-1 text-center">Renroku</h1>
@@ -118,18 +120,6 @@
 							<!-- Table that will dsiplay the contacts
 										->id = contactsTable	-->
 							<table class="table" id="contactsTable">
-								<tr>
-									<th>Name</th>
-									<th>Phone Number</th>
-									<th>E-Mail Address</th>
-								</tr>
-
-								<tr>
-									<td>John Doe</td>
-									<td>+1 123-123-1234</td>
-									<td>idoedawae@gmail.com</td>
-								</tr>
-
 							</table>
 						</div>
 							<div class="card-footer">
@@ -141,7 +131,7 @@
 			<!-- Div for adding contacts form
 					->Hidden on homepage, shown while create a new contact
 					->id = addContactDiv	-->
-			<div id="addContactDiv">
+			<div id="addContactDiv" style="display:none; visibility:hidden;">
 				<div class="card">
 					<div class="card-header">
 						<h2><font face="calibri">Add New Contact</font></h2>

@@ -8,8 +8,8 @@ var tableData;
 function doLogin()
 {
     // Get the username and password from the HTML fields
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
+    var username = document.getElementById("loginName").value;
+    var password = document.getElementById("loginPassword").value;
 
     // Ensure that the HTML login result message is blank
     document.getElementById("loginResult").innerHTML = "";
@@ -41,8 +41,8 @@ function doLogin()
         }
 
         // Reset the HTML fields to blank
-        document.getElementById("username").value = "";
-        document.getElementById("password").value = "";
+        document.getElementById("loginName").value = "";
+        document.getElementById("loginPassword").value = "";
 
         // Hide the login HTML elements
         hideOrShow( "loginDiv", false);
@@ -114,19 +114,28 @@ function hideOrShowByClass(elementClass, showState)
 
 function showAddContactDiv()
 {
-  hideOrShow("addContactUIDiv", true);
+  hideOrShow("addContactDiv", true);
+  hideOrShow( "accessUIDiv", false);
+}
+
+function showAccessUIDiv()
+{
+  hideOrShow("accessUIDiv", true);
+  hideOrShow( "addContactDiv", false);
+  unSelectContactsToDelete();
+
 }
 
 function addContact()
 {
-  var firstName = document.getElementById("firstN").value;
-  var lastName = document.getElementById("lastN").value;
-  var phoneNumber = document.getElementById("phoneN").value;
-  var email = document.getElementById("email").value;
+  var firstName = document.getElementById("firstNameNewEntry").value;
+  var lastName = document.getElementById("lastNameNewEntry").value;
+  var phoneNumber = document.getElementById("phoneNewEntry").value;
+  var email = document.getElementById("emailNewEntry").value;
   if(!firstName | !lastName | !phoneNumber | !email)
   {
     console.log("must fill out all of the fields in order to add a contact");
-    var errorMessage = document.getElementById("addingContactsErrorMessage");
+    var errorMessage = document.getElementById("loginResult");
     errorMessage.innerHTML = "must fill out all of the fields in order to add a contact";
     return;
   }
@@ -141,10 +150,11 @@ function addContact()
   var jsonPayload = "{"+functionName+fName+lName+phone+emailAddress+user+"}";
   console.log("the payload for add user was: "+jsonPayload);
   CallServerSide(jsonPayload);
-  var errorMessage = document.getElementById("addingContactsErrorMessage");
+  var errorMessage = document.getElementById("loginResult");
   errorMessage.innerHTML = "";
   setTimeout(fillTable, 3000);
-  hideOrShow("addContactUIDiv", false);
+  hideOrShow("addContactDiv", false);
+  hideOrShow( "accessUIDiv", true);
 
   console.log(jsonPayload);
 }
@@ -220,7 +230,7 @@ function deleteContacts()
     }
     if(i == nodeList.length - 1) break;
   }
-  var errorMessage = document.getElementById("deletingContactsErrorMessage");
+  var errorMessage = document.getElementById("loginResult");
   errorMessage.innerHTML = "";
   setTimeout(fillTable, 3000);
   hideOrShow("confirmDelete", false);
@@ -244,6 +254,13 @@ function selectContactsToDelete()
   hideOrShowByClass("deleteButton", true);
   hideOrShow("confirmDelete", true);
   hideOrShow("showDeleteMarks", false);
+}
+function unSelectContactsToDelete()
+{
+  hideOrShow("deleteHeader", false);
+  hideOrShowByClass("deleteButton", false);
+  hideOrShow("confirmDelete", false);
+  hideOrShow("showDeleteMarks", true);
 }
 
 function buildTableHeader()
