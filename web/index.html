@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <title>COP4331-G2 Contact List</title>
+  <title>***COP4331-G2 Contact List***</title>
   <script type="text/javascript" src="js/code.js"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -13,13 +13,12 @@
 <body>
 <h1>COP4331-G2 Contact List</h1>
 <div id="loginDiv">
-  Login: <input type="text" id="loginName"><br />
-  Password: <input type="password" id="loginPassword"><br />
+  Login: <input type="text" id="username"><br />
+  Password: <input type="password" id="password"><br />
   <button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Do It </button>
   <span id="loginResult"></span>
 </div>
 <div id="loggedInDiv" style="display:none; visibility:hidden;">
-  Logged in as <span id="userName"></span><br />
   <button type="button" id="logoutButton" class="buttons" onclick="doLogout();"> Log Out </button>
 </div>
 <div id="accessUIDiv" style="display:none; visibility:hidden;">
@@ -61,7 +60,7 @@
 </body>
 
 <script>
-  var input = document.getElementById("loginPassword");
+  var input = document.getElementById("password");
   input.addEventListener("keyup", function(event) {
       event.preventDefault();
       if (event.keyCode === 13) {

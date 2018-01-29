@@ -1,0 +1,216 @@
+<html>
+
+<head>
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<!--<link href="css/styles.css" rel="stylesheet"> -->
+
+</head>
+<header>
+	<title>Renraku</title>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  		<a class="navbar-brand" href="#">Renroku</a>
+
+			<!-- div for Search and Add Contacts buttons
+						->Hidden on homepage, visible on logged in
+						->ID: loggedInButtonsDiv    					-->
+				<div id="loggedInButtonsDiv">
+					<form class="form-inline mr-sm-2 my-2 my-lg-0">
+						<button class="btn btn-primary my-2 my-sm-0 mr-2">Contact List</button>
+						<button class="btn btn-success my-2 my-sm-0 mr-2">Add Contact</button>
+				</form>
+				</div>
+
+				<!-- UL class to seperate button spacing on navbar -->
+  		<ul class="navbar-nav mr-auto mt-2 mt-md-0">
+    	</ul>
+
+			<!-- Div for navbar buttons
+		 				->Visible on homepage, hidden while logged in
+						->ID: loginDiv	-->
+	  	<form class="form-inline mr-sm-2 my-2 my-lg-0" >
+				<div id="loginDiv" style="display:none; visibility:hidden;">
+	    		<input class="form-control mr-sm-2 mr-sm-2" id="loginName" type="text" placeholder="Username" aria-label="Username">
+	    		<input class="form-control mr-sm-2" id="loginPassword" type="password" placeholder="Password" aria-label="Password">
+	    		<button class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" type="button" onclick="doLogin();" >Login</button>
+	    		<button class="btn btn-success my-2 my-sm-0" id="signupButton" type="button">Sign Up</button>
+				</div>
+
+				<!-- div for logout button and "Logged in as" text
+						->Hidden on homepage, always shown while logged in
+					 	->id = loggedInDiv	-->
+				<div id="loggedinDiv" class="form-row">
+					<ul class="navbar-nav mr-2 mt-md-0 ">
+
+						<!-- span containing "logged in text"
+									->Empty on homepage, always userLastName, userFirstName while logged in
+									->id = loggedInUserFullName	-->
+						<li class="nav-item navbar-text">Logged in as<span class="navbar-text" id=loggedInUserFullName></span></li>
+			    </ul>
+				<button class="btn btn-danger" id="logoutButton" type="button" onclick="doLogout();">Logout</button>
+			</div>
+  		</form>
+	</nav>
+</header>
+
+
+<div class="container">
+	<body>
+		<br></br>
+		<!-- Div for the homepage Welcome
+	 			->Shown when on homepage
+				->ID: homepageWelcomeDiv	-->
+		<div id="homepageWelcomeDiv" class="container-fluid mt-4 bg-light"style="display:none; visibility:hidden;">
+			<div class="row">
+				<div class="col">
+					<h1 class="display-2 text-center">Welcome to</h1></br><h1 class="display-1 text-center">Renroku</h1>
+				</div>
+			</div>
+		</div>
+
+		<div id="signupDiv" style="display:none; visibility:hidden;">
+			<!-- Form for creating a new account/new user. Form IDs:
+						->Username input field: createUser
+						->Password input field: createPassword
+						->Password confirmation: confirmPassowrd
+						->Button for Sign Up Submission: signUpButton -->
+			<form>
+			  <div class="form-row">
+					<div class="form-group col-md-3"></div>
+			    <div class="form-group col-md-6">
+				      <label for="createUser">Username</label>
+				      <input type="text" class="form-control" id="createUser" placeholder="Username">
+
+							</br>
+
+				      <label for="createPassword">Password</label>
+				      <input type="password" class="form-control" id="createPassword" placeholder="Password">
+
+							</br>
+
+				    	<label for="confirmPassword">Confirm Password</label>
+				    	<input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+
+							</br>
+
+						  <button type="submit" class="btn btn-primary" id="signUpButton">Sign Up </button>
+			  	</div>
+				</div>
+			</form>
+		</div>
+
+	<span id="loginResult"> </span>
+
+		<!-- Div that dispalys contacts and search bar
+	 			->Hidden on homepage, shown while on contact List
+			->id = accessUIDiv
+			-> Function for searching a contact changed from: searchColor() To: searchContact()
+		  -> ID for search contact result changed from: colorSearchResult To: contactSearchResult	-->
+			<div id="accessUIDiv" style="display:none; visibility:hidden;">
+				<div class="card">
+					<div class="card-header">
+							<input type="text" class="form-control" id="searchText" placeholder="Search Contacts" onclick="searchContact();">
+							<span id="contactSearchResult"></span>
+					</div>
+						<div class="card-body">
+
+							<!-- Table that will dsiplay the contacts
+										->id = contactsTable	-->
+							<table class="table" id="contactsTable">
+								<tr>
+									<th>Name</th>
+									<th>Phone Number</th>
+									<th>E-Mail Address</th>
+								</tr>
+
+								<tr>
+									<td>John Doe</td>
+									<td>+1 123-123-1234</td>
+									<td>idoedawae@gmail.com</td>
+								</tr>
+
+							</table>
+						</div>
+							<div class="card-footer">
+								Other Stuff
+							</div>
+				</div>
+			</div>
+
+			<!-- Div for adding contacts form
+					->Hidden on homepage, shown while create a new contact
+					->id = addContactDiv	-->
+			<div id="addContactDiv">
+				<div class="card">
+					<div class="card-header">
+						<h2><font face="calibri">Add New Contact</font></h2>
+					</div>
+					<div class="card-body">
+
+						<!-- Form for adding a new contact. IDs:
+					 				->ID for First Name field: firstNameNewEntry
+									->ID for Last Name field: lastNameNewEntry
+									->ID for E-Mail field: emailNewEntry
+									->ID for Phone Number field: phoneNewEntry	-->
+						<form>
+							<div class="form-row">
+									<div class="form-group col-sm-6 col-md-6">
+										<label for="FirstName">First Name</label>
+										<input type="text" class="form-control" id="firstNameNewEntry" placeholder="First Name">
+									</div>
+									<div class="form-group col-sm-6 col-md-6">
+										<label for="LastName">Last Name</label>
+										<input type="text" class="form-control" id="lastNameNewEntry" placeholder="Last Name">
+									</div>
+								</div>
+								<div class="form-row">
+									<div class="form-group col-sm-6 col-md-6">
+										<label for="inputEmail4">E-Mail</label>
+										<input type="email" class="form-control" id="emailNewEntry" placeholder="E-Mail Address">
+									</div>
+									<div class="form-group col-sm-6 col-md-6">
+										<label for="LastName">Phone Number</label>
+										<input type="text" class="form-control" id="phoneNewEntry" placeholder="Phone Number">
+									</div>
+							</div>
+
+							<!-- Buttons to create and cancel creating a contact
+										->Function for creating a contact changed from: addColor() To: addContact()
+										->ID for create contact button changed from: addColorButton To: addContactButton
+										->Cancel creating a contact button ID: cancelContactButton	-->
+
+							<div class="form-row">
+								<button type="button" class="btn btn-secondary mr-2" id="addContactButton" onclick="addContact();">Add Contact</button>
+								<button type="button" class="btn btn-danger mx-2" id="cancelContactButton">Cancel</button>
+								<span id="contactAddResult"></span>
+
+							</div>
+						</form>
+					</div>
+
+				</div>
+
+			</div>
+
+
+		</body>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<!--<script type="text/javascript" src="js/code.js"></script>
+
+	<script>
+		var input = document.getElementById("loginPassword");
+		input.addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode === 13) {
+		        document.getElementById("loginButton").click();
+		    }
+		});
+	</script>
+
+-->
+
+</html>
