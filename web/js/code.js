@@ -324,15 +324,22 @@ function buildTableData(data)
         var emailAddress = document.createElement('td');
         emailAddress.innerHTML = data[i].emailAddress;
         var deleteButton = document.createElement('input');
+        var deleteData = document.createElement('td');
+        var deleteDiv = document.createElement('div');
+        deleteDiv.className = "checkbox checkbox-success";
+
         deleteButton.type = "checkbox";
         deleteButton.style.visibility = "hidden";
         deleteButton.style.display = "none";
-        deleteButton.className = "deleteButton";
+        deleteButton.className = "deleteButton styled ml-3";
+        deleteDiv.appendChild(deleteButton);
+        deleteData.appendChild(deleteDiv);
+
         tableRow.appendChild(firstName);
         tableRow.appendChild(lastName);
         tableRow.appendChild(phoneNumber);
         tableRow.appendChild(emailAddress);
-        tableRow.appendChild(deleteButton);
+        tableRow.appendChild(deleteData);
         tud.appendChild(tableRow);
     }
 }
