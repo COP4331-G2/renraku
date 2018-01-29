@@ -2,29 +2,26 @@
 
 <head>
 		<script type="text/javascript" src="js/code.js"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
- 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<!--<link href="css/styles.css" rel="stylesheet"> -->
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<!--<link href="css/styles.css" rel="stylesheet"> -->
 
 </head>
 <header>
 	<title>Renraku</title>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  		<a class="navbar-brand">Renroku</a>
+  		<a class="navbar-brand" href="#">Renraku</a>
 
 			<!-- div for Search and Add Contacts buttons
 						->Hidden on homepage, visible on logged in
 						->ID: loggedInButtonsDiv    					-->
 				<div id="loggedInButtonsDiv">
 					<form class="form-inline mr-sm-2 my-2 my-lg-0">
-						<button type="button" onclick="showAccessUIDiv()" class="btn btn-primary my-2 my-sm-0 mr-2">Contact List</button>
-						<button type="button" onclick="showAddContactDiv()" class="btn btn-success my-2 my-sm-0 mr-2">Add Contact</button>
-						<button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger my-2 my-sm-0 mr-2">Delete Contacts</button>
-						<button type="button" id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();"class="btn btn-danger my-2 my-sm-0 mr-2">Confirm Delete</button>
-				</form>
+			</form>
 				</div>
 
 				<!-- UL class to seperate button spacing on navbar -->
@@ -38,8 +35,68 @@
 				<div id="loginDiv">
 	    		<input class="form-control mr-sm-2 mr-sm-2" id="loginName" type="text" placeholder="Username" aria-label="Username">
 	    		<input class="form-control mr-sm-2" id="loginPassword" type="password" placeholder="Password" aria-label="Password">
-	    		<button type="button" class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" onclick="doLogin();" >Login</button>
-	    		<button type="button" class="btn btn-success my-2 my-sm-0" id="signupButton">Sign Up</button>
+	    		<button class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" type="button" onclick="doLogin();" >Login</button>
+	    		<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#signupModal">
+			    Sign Up
+			  	</button>
+
+			  	<div class="container">
+			  		<!-- The Modal -->
+				  <div class="modal fade" id="signupModal">
+				    <div class="modal-dialog">
+				      <div class="modal-content">
+
+				        <!-- Modal Header -->
+				        <div class="modal-header">
+				          <h4 class="modal-title">Sign Up</h4>
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        </div>
+
+				        <!-- Modal body -->
+				        <div class="modal-body">
+				          	<div class="card">
+								<div class="card-body">
+									<!-- Form for creating a new account/new user. Form IDs:
+												->Username input field: createUser
+												->Password input field: createPassword
+												->Password confirmation: confirmPassowrd
+												->Button for Sign Up Submission: signUpButton -->
+									<form>
+									  <div class="form-row">
+											<div class="form-group col-md-3"></div>
+									    <div class="form-group col-md-6">
+										      <label for="createUser">Username</label>
+										      <input type="text" class="form-control" id="createUser" placeholder="Username">
+
+													</br>
+
+										      <label for="createPassword">Password</label>
+										      <input type="password" class="form-control" id="createPassword" placeholder="Password">
+
+													</br>
+
+										    	<label for="confirmPassword">Confirm Password</label>
+										    	<input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+									  	</div>
+										</div>
+									</form>
+								</div>
+
+						</div>				        </div>
+
+				        <!-- Modal footer -->
+				        <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Creat Account</button>
+				          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				        </div>
+
+				      </div>
+				    </div>
+				  </div>
+			  	</div>
+
+
+
 				</div>
 
 				<!-- div for logout button and "Logged in as" text
@@ -53,7 +110,7 @@
 									->id = loggedInUserFullName	-->
 						<li class="nav-item navbar-text">Logged in as<span class="navbar-text" id=loggedInUserFullName></span></li>
 			    </ul>
-				<button type="button" class="btn btn-danger" id="logoutButton" onclick="doLogout();">Logout</button>
+				<button class="btn btn-danger" id="logoutButton" type="button" onclick="doLogout();">Logout</button>
 			</div>
   		</form>
 	</nav>
@@ -115,8 +172,17 @@
 			<div id="accessUIDiv" style="display:none; visibility:hidden;">
 				<div class="card">
 					<div class="card-header">
-							<input type="text" class="form-control" id="searchText" placeholder="Search Contacts" oninput="searchContacts();">
-							<span id="contactSearchResult"></span>
+							<form class="form-inline mr-sm-2 my-2 my-lg-0">
+									<input type="text" class="form-control col-sm-6" id="searchText" placeholder="Search Contacts" onclick="searchContact();">
+
+									<span class="col-md-2" id="contactSearchResult"></span>
+									<button onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger my-2 my-sm-0 mr-2 col-md-2">Delete Contacts</button>
+									<button id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();" class="btn btn-danger col-md-2">Confirm Delete</button>
+									<button type="button " class="btn btn-primary col-md-2" data-toggle="modal" data-target="#myModal">
+									  Add New Contact
+									</button>
+
+							</form>
 					</div>
 						<div class="card-body">
 
@@ -126,66 +192,78 @@
 							</table>
 						</div>
 							<div class="card-footer">
-								Other Stuff
+								C Renraku
 							</div>
 				</div>
-			</div>
 
-			<!-- Div for adding contacts form
-					->Hidden on homepage, shown while create a new contact
-					->id = addContactDiv	-->
-			<div id="addContactDiv" style="display:none; visibility:hidden;">
-				<div class="card">
-					<div class="card-header">
-						<h2><font face="calibri">Add New Contact</font></h2>
-					</div>
-					<div class="card-body">
+				<!-- New Contact Modal -->
+				<div class="modal fade" id="myModal">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
 
-						<!-- Form for adding a new contact. IDs:
-					 				->ID for First Name field: firstNameNewEntry
-									->ID for Last Name field: lastNameNewEntry
-									->ID for E-Mail field: emailNewEntry
-									->ID for Phone Number field: phoneNewEntry	-->
-						<form>
-							<div class="form-row">
-									<div class="form-group col-sm-6 col-md-6">
-										<label for="FirstName">First Name</label>
-										<input type="text" class="form-control" id="firstNameNewEntry" placeholder="First Name">
-									</div>
-									<div class="form-group col-sm-6 col-md-6">
-										<label for="LastName">Last Name</label>
-										<input type="text" class="form-control" id="lastNameNewEntry" placeholder="Last Name">
-									</div>
+				      <!-- Modal Header -->
+				      <div class="modal-header">
+				        <h4 class="modal-title">Add New Contact</h4>
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				      </div>
+
+				      <!-- Modal body -->
+				      <div class="container">
+					      <div class="modal-body">
+							<div class="card">
+								<div class="card-body">
+
+									<!-- Form for adding a new contact. IDs:
+								 				->ID for First Name field: firstNameNewEntry
+												->ID for Last Name field: lastNameNewEntry
+												->ID for E-Mail field: emailNewEntry
+												->ID for Phone Number field: phoneNewEntry	-->
+									<form>
+										<div class="form-row">
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="FirstName">First Name</label>
+													<input type="text" class="form-control" id="firstNameNewEntry" placeholder="First Name">
+												</div>
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="LastName">Last Name</label>
+													<input type="text" class="form-control" id="lastNameNewEntry" placeholder="Last Name">
+												</div>
+											</div>
+											<div class="form-row">
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="inputEmail4">E-Mail</label>
+													<input type="email" class="form-control" id="emailNewEntry" placeholder="E-Mail Address">
+												</div>
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="LastName">Phone Number</label>
+													<input type="text" class="form-control" id="phoneNewEntry" placeholder="Phone Number">
+												</div>
+										</div>
+
+										<!-- Buttons to create and cancel creating a contact
+													->Function for creating a contact changed from: addColor() To: addContact()
+													->ID for create contact button changed from: addColorButton To: addContactButton
+													->Cancel creating a contact button ID: cancelContactButton	-->
+										</div>
+									</form>
 								</div>
-								<div class="form-row">
-									<div class="form-group col-sm-6 col-md-6">
-										<label for="inputEmail4">E-Mail</label>
-										<input type="email" class="form-control" id="emailNewEntry" placeholder="E-Mail Address">
-									</div>
-									<div class="form-group col-sm-6 col-md-6">
-										<label for="LastName">Phone Number</label>
-										<input type="text" class="form-control" id="phoneNewEntry" placeholder="Phone Number">
-									</div>
-							</div>
 
-							<!-- Buttons to create and cancel creating a contact
-										->Function for creating a contact changed from: addColor() To: addContact()
-										->ID for create contact button changed from: addColorButton To: addContactButton
-										->Cancel creating a contact button ID: cancelContactButton	-->
+						</div>
+				      </div>
 
-							<div class="form-row">
-								<button type="button" class="btn btn-secondary mr-2" id="addContactButton" onclick="addContact();">Add Contact</button>
-								<button type="button" class="btn btn-danger mx-2" id="cancelContactButton">Cancel</button>
-								<span id="contactAddResult"></span>
+				      <!-- Modal footer -->
+				      <div class="modal-footer">
+				      <button type="button" class="btn btn-secondary" id="addContactButton" onclick="addContact();" data-dismiss="modal">Add Contact</button>
+				        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+				        <span id="contactAddResult"></span>
+				      </div>
 
-							</div>
-						</form>
-					</div>
-
+				    </div>
+				  </div>
+				</div>
 				</div>
 
 			</div>
-
 
 		</body>
 	</div>
