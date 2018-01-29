@@ -17,6 +17,7 @@
 		while($row = $result->fetch_assoc())
 		{
 			if($count > 0)
+
 			{
 				$searchResults .= ",";
 			}
