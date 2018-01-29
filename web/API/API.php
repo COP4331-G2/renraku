@@ -256,8 +256,14 @@ function searchContacts($dbConnection, $jsonPayload)
     $searchOption = $jsonPayload['searchOption'];
     $searchFor    = $jsonPayload['searchFor'];
 
+    // This block uses prepared statements and parameterized queries to protect against SQL injection
     // MySQL query to get ALL contacts associated with the user in the database
-    $result = $dbConnection->query("SELECT * FROM Contacts WHERE userID=$userID AND $searchOption= '$searchFor' ");
+    $query = $dbConnection->prepare("SELECT * FROM Contacts WHERE userID = $userID AND $searchOption = ?");
+    $query->bind_param('s', $searchFor);
+    $query->execute();
+
+    // Result from the query
+    $result = $query->get_result();
 
     // Setup an array to store multiple contact information
     $searchResults = [];
