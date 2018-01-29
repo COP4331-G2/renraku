@@ -172,8 +172,8 @@ function addContact($dbConnection, $jsonPayload)
 
     // This block uses prepared statements and parameterized queries to protect against SQL injection
     // MySQL query to add the contact to the database
-    $query = $dbConnection->prepare("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES ('?', '?', ?, '?', ?)");
-    $query->bind_param('ssdsi', $firstName, $lastName, $phoneNumber, $emailAddress, $userID);
+    $query = $dbConnection->prepare("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES (?, ?, ?, ?, ?)");
+    $query->bind_param('ssssi', $firstName, $lastName, $phoneNumber, $emailAddress, $userID);
     $query->execute();
 
     // Result from the query

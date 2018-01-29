@@ -235,6 +235,9 @@ function deleteContacts()
   setTimeout(fillTable, 3000);
   hideOrShow("confirmDelete", false);
   hideOrShow("showDeleteMarks", true);
+
+  // To prevent page refresh
+  return false;
 }
 
 function searchContacts()
@@ -254,6 +257,9 @@ function selectContactsToDelete()
   hideOrShowByClass("deleteButton", true);
   hideOrShow("confirmDelete", true);
   hideOrShow("showDeleteMarks", false);
+
+  // To prevent page refresh
+  return false;
 }
 function unSelectContactsToDelete()
 {

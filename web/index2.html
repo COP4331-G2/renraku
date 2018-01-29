@@ -3,24 +3,27 @@
 <head>
 		<script type="text/javascript" src="js/code.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-	<!--<link href="css/styles.css" rel="stylesheet"> -->
+ 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<!--<link href="css/styles.css" rel="stylesheet"> -->
 
 </head>
 <header>
 	<title>Renraku</title>
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  		<a class="navbar-brand" href="#">Renroku</a>
+  		<a class="navbar-brand">Renroku</a>
 
 			<!-- div for Search and Add Contacts buttons
 						->Hidden on homepage, visible on logged in
 						->ID: loggedInButtonsDiv    					-->
 				<div id="loggedInButtonsDiv">
 					<form class="form-inline mr-sm-2 my-2 my-lg-0">
-						<button onclick="showAccessUIDiv()" class="btn btn-primary my-2 my-sm-0 mr-2">Contact List</button>
-						<button onclick="showAddContactDiv()" class="btn btn-success my-2 my-sm-0 mr-2">Add Contact</button>
-						<button onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger my-2 my-sm-0 mr-2">Delete Contacts</button>
-						<button id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();"class="btn btn-danger my-2 my-sm-0 mr-2">Confirm Delete</button>
+						<button type="button" onclick="showAccessUIDiv()" class="btn btn-primary my-2 my-sm-0 mr-2">Contact List</button>
+						<button type="button" onclick="showAddContactDiv()" class="btn btn-success my-2 my-sm-0 mr-2">Add Contact</button>
+						<button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger my-2 my-sm-0 mr-2">Delete Contacts</button>
+						<button type="button" id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();"class="btn btn-danger my-2 my-sm-0 mr-2">Confirm Delete</button>
 				</form>
 				</div>
 
@@ -35,8 +38,8 @@
 				<div id="loginDiv">
 	    		<input class="form-control mr-sm-2 mr-sm-2" id="loginName" type="text" placeholder="Username" aria-label="Username">
 	    		<input class="form-control mr-sm-2" id="loginPassword" type="password" placeholder="Password" aria-label="Password">
-	    		<button class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" type="button" onclick="doLogin();" >Login</button>
-	    		<button class="btn btn-success my-2 my-sm-0" id="signupButton" type="button">Sign Up</button>
+	    		<button type="button" class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" onclick="doLogin();" >Login</button>
+	    		<button type="button" class="btn btn-success my-2 my-sm-0" id="signupButton">Sign Up</button>
 				</div>
 
 				<!-- div for logout button and "Logged in as" text
@@ -50,7 +53,7 @@
 									->id = loggedInUserFullName	-->
 						<li class="nav-item navbar-text">Logged in as<span class="navbar-text" id=loggedInUserFullName></span></li>
 			    </ul>
-				<button class="btn btn-danger" id="logoutButton" type="button" onclick="doLogout();">Logout</button>
+				<button type="button" class="btn btn-danger" id="logoutButton" onclick="doLogout();">Logout</button>
 			</div>
   		</form>
 	</nav>
@@ -187,8 +190,6 @@
 		</body>
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 	<!--<script type="text/javascript" src="js/code.js"></script>
 
 	<script>
