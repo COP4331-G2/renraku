@@ -46,11 +46,17 @@ function callVariableFunction($dbConnection, $jsonPayload)
 function loginAttempt($dbConnection, $jsonPayload)
 {
     // Get the username and password from the JSON payload
-    $username = protectAgainstInjection($jsonPayload['username']);
+    $username = trim($jsonPayload['username']);
     $password = $jsonPayload['password'];
 
+    // This block uses prepared statements and parameterized queries to protect against SQL injection
     // MySQL query to check if the username exists in the database
-    $result = $dbConnection->query("SELECT * FROM Users WHERE username='$username'");
+    $query = $dbConnection->prepare("SELECT * FROM Users WHERE username = ?");
+    $query->bind_param('s', $username);
+    $query->execute();
+
+    // Result from the query
+    $result = $query->get_result();
 
     // Verify if the username exists
     if ($result->num_rows > 0) {
@@ -84,7 +90,7 @@ function loginAttempt($dbConnection, $jsonPayload)
 function createUser($dbConnection, $jsonPayload)
 {
     // Get the username and password from the JSON payload
-    $username = protectAgainstInjection($jsonPayload['username']);
+    $username = trim($jsonPayload['username']);
     $password = $jsonPayload['password'];
 
     // Check for various error-inducing situations
@@ -95,8 +101,14 @@ function createUser($dbConnection, $jsonPayload)
     } else if (strlen($password) <= 0) {
         returnError('Password cannot be empty.');
     } else {
+        // This block uses prepared statements and parameterized queries to protect against SQL injection
         // MySQL query to check if a username already exists in the database
-        $result = $dbConnection->query("SELECT * FROM Users WHERE username='$username'");
+        $query = $dbConnection->prepare("SELECT * FROM Users WHERE username='?'");
+        $query->bind_param('s', $username);
+        $query->execute();
+
+        // Result from the query
+        $result = $query->get_result();
 
         // If a username already exists...
         // Return a JSON error response
@@ -107,8 +119,14 @@ function createUser($dbConnection, $jsonPayload)
         // Encrypt the password (using PHP defaults)
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+        // This block uses prepared statements and parameterized queries to protect against SQL injection
         // MySQL query to add the username and password into the database
-        $result = $dbConnection->query("INSERT INTO Users (username, password) VALUES ('$username', '$hashedPassword')");
+        $query = $dbConnection->prepare("INSERT INTO Users (username, password) VALUES ('?', '?')");
+        $query->bind_param('ss', $username, $hashedPassword);
+        $query->execute();
+
+        // Result from the query
+        $result = $query->get_result();
 
         // Check to see if the insertion was successful...
         if ($result) {
@@ -147,13 +165,19 @@ function addContact($dbConnection, $jsonPayload)
 {
     // Get the contact information from the JSON payload
     $firstName    = $jsonPayload['firstName'];
-    $lastName    = $jsonPayload['lastName'];
+    $lastName     = $jsonPayload['lastName'];
     $phoneNumber  = $jsonPayload['phoneNumber'];
     $emailAddress = $jsonPayload['emailAddress'];
     $userID       = $jsonPayload['userID'];
 
+    // This block uses prepared statements and parameterized queries to protect against SQL injection
     // MySQL query to add the contact to the database
-    $result = $dbConnection->query("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES ('$firstName', '$lastName', '$phoneNumber', '$emailAddress', '$userID')");
+    $query = $dbConnection->prepare("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES ('?', '?', ?, '?', ?)");
+    $query->bind_param('ssdsi', $firstName, $lastName, $phoneNumber, $emailAddress, $userID);
+    $query->execute();
+
+    // Result from the query
+    $result = $query->get_result();
 
     // Check to see if the insertion was successful...
     if ($result) {
@@ -225,50 +249,49 @@ function getContacts($dbConnection, $jsonPayload)
     returnSuccess('Contacts found.', $searchResults);
 }
 
+/**
+ * Get all contacts matching a user-defined search criteria
+ *
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
+ */
 function searchContacts($dbConnection, $jsonPayload)
 {
-  // Get the user's id from JSON payload
-  $userID = $jsonPayload['userID'];
-  $searchOption = $jsonPayload['searchOption'];
-  $searchFor = $jsonPayload['searchFor'];
+    // Get the user's id and search parameters from JSON payload
+    $userID       = $jsonPayload['userID'];
+    $searchOption = $jsonPayload['searchOption'];
+    $searchFor    = $jsonPayload['searchFor'];
 
-  // MySQL query to get ALL contacts associated with the user in the database
-  $result = $dbConnection->query("SELECT * FROM Contacts WHERE userID=$userID AND $searchOption= '$searchFor' ");
+    // This block uses prepared statements and parameterized queries to protect against SQL injection
+    // MySQL query to get ALL contacts matching the search criteria for ANY column
+    $query = "SELECT * FROM Contacts WHERE userID = $userID AND (";
+    $query .= "firstName LIKE '%?%' OR lastName LIKE '%?%' OR ";
+    $query .= "phoneNumber LIKE '%?%' OR emailAddress LIKE '%?%')";
+    $query = $dbConnection->prepare($query);
+    $query->bind_param('ssss', $searchFor, $searchFor, $searchFor, $searchFor);
+    $query->execute();
 
-  // Setup an array to store multiple contact information
-  $searchResults = [];
+    // Result from the query
+    $result = $query->get_result();
 
-  // Iterate through all found contacts to store their information
-  while ($row = $result->fetch_assoc()) {
-      // Column information for a contact
-      $contactInformation = [
-          'contactId'    => $row['id'],
-          'firstName'    => $row['firstName'],
-          'lastName'     => $row['lastName'],
-          'phoneNumber'  => $row['phoneNumber'],
-          'emailAddress' => $row['emailAddress'],
-      ];
+    // Setup an array to store multiple contact information
+    $searchResults = [];
 
-      // Append this information to the searchResults array
-      $searchResults[] = $contactInformation;
-  }
+    // Iterate through all found contacts to store their information
+    while ($row = $result->fetch_assoc()) {
+        // Column information for a contact
+        $contactInformation = [
+            'contactId'    => $row['id'],
+            'firstName'    => $row['firstName'],
+            'lastName'     => $row['lastName'],
+            'phoneNumber'  => $row['phoneNumber'],
+            'emailAddress' => $row['emailAddress'],
+        ];
 
-  // Return the built searchResults array prepared for a JSON response
-  returnSuccess('Contacts found.', $searchResults);
-}
-/**
- * Remove single-quotes and semicolons from a string to protect against SQL injection
- *
- * @param string $jsonString A SQL-formatted string
- *
- * @return string Updated string
- */
-function protectAgainstInjection($jsonString)
-{
-    // Remove any single-quote or semicolon from the string
-    $result  = str_replace("'", "", $jsonString);
-    $result2 = str_replace(";", "", $result);
+        // Append this information to the searchResults array
+        $searchResults[] = $contactInformation;
+    }
 
-    // Remove any whitespace in the beginning or end of the string
-    return trim($result2);
+    // Return the built searchResults array prepared for a JSON response
+    returnSuccess('Contacts found.', $searchResults);
 }
