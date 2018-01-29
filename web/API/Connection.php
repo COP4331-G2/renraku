@@ -18,7 +18,7 @@ function establishConnection()
         returnError('Connection exception caught.');
 
         // This more verbose exception message can be enabled for debug purposes
-        returnError('Connection exception caught: ' . $e->getMessage());
+        // returnError('Connection exception caught: ' . $e->getMessage());
     }
 
     // Check for a connection error
@@ -42,7 +42,12 @@ function establishConnection()
 function readSecrets()
 {
     // Open secrets file
-    $secretsFile = fopen("../secrets", "r");
+    $secretsFile = fopen('../secrets', 'r');
+
+    // If secrets file cannot be opened, return JSON error response
+    if (!$secretsFile) {
+        returnError('Connection error (cannot open database credentials).');
+    }
 
     // While we haven't reached the EOF (end of file)...
     while (!feof($secretsFile)) {
@@ -54,7 +59,7 @@ function readSecrets()
     fclose($secretsFile);
 
     // Create an array (delimited by a comma) from the retrieved string
-    $secretsArray = explode(",", $secretsString);
+    $secretsArray = explode(',', $secretsString);
 
     // Setup the array with key-value pairs (for more user-friendly interaction)
     $secrets['host']     = $secretsArray[0];
@@ -93,7 +98,7 @@ function sendJSONResponse($jsonResponse)
     header('Access-Control-Allow-Headers: Content-Type, origin');
 
     // Send the JSON as a string back to the client-side
-    echo $jsonReponse;
+    echo $jsonResponse;
 
     // Grab the variable from global scope
     global $dbConnection;
@@ -113,7 +118,7 @@ function sendJSONResponse($jsonResponse)
  * @param string $successMessage String for success message
  * @param string|array $results String or array for results
  */
-function returnSuccess($message = '', $results = null)
+function returnSuccess($message = '', $results = '')
 {
     // Encode the JSON information
     $json = json_encode([
@@ -123,7 +128,7 @@ function returnSuccess($message = '', $results = null)
     ]);
 
     // Send JSON response back to the client-side application
-    sendJsendJSONResponseSON($json);
+    sendJSONResponse($json);
 }
 
 /**

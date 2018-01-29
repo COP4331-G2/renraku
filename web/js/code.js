@@ -46,11 +46,11 @@ function doLogin()
         document.getElementById("password").value = "";
 
         // Hide the login HTML elements
-        hideOrShow( "loginDiv", false);
+        hideOrShow("loginDiv", false);
 
         // Show the post-login HTML elements
-        hideOrShow( "loggedInDiv", true);
-        hideOrShow( "accessUIDiv", true);
+        hideOrShow("loggedInDiv", true);
+        hideOrShow("accessUIDiv", true);
 
         // Fill the user's contacts table
         // This also currently sets the userID for fillTable()

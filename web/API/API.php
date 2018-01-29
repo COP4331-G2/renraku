@@ -33,7 +33,7 @@ function callVariableFunction($dbConnection, $jsonPayload)
         $function($dbConnection, $jsonPayload);
     } else {
         // If the function is not callable, return a JSON error response
-        returnError("JSON payload tried to call undefined PHP function $function().");
+        returnError('JSON payload tried to call undefined PHP function ' . $function . '()');
     }
 }
 
@@ -62,16 +62,16 @@ function loginAttempt($dbConnection, $jsonPayload)
         if (password_verify($password, $row['password'])) {
             // If the password is correct...
             // Return the JSON success response (including user's id)
-            returnSuccess('Login successful', $row['id']);
+            returnSuccess('Login successful.', $row['id']);
         } else {
             // If the password isn't correct...
             // Return a JSON error response
-            returnError("Password incorrect.");
+            returnError('Password incorrect.');
         }
     } else {
         // If the username doesn't exist...
         // Return a JSON error response
-        returnError("Username not found.");
+        returnError('Username not found.');
     }
 }
 
@@ -146,11 +146,11 @@ function deleteUser($dbConnection, $jsonPayload)
 function addContact($dbConnection, $jsonPayload)
 {
     // Get the contact information from the JSON payload
-    $firstName    = $jsonPayload["firstName"];
-    $lasttName    = $jsonPayload["lastName"];
-    $phoneNumber  = $jsonPayload["phoneNumber"];
-    $emailAddress = $jsonPayload["emailAddress"];
-    $userID       = $jsonPayload["userID"];
+    $firstName    = $jsonPayload['firstName'];
+    $lasttName    = $jsonPayload['lastName'];
+    $phoneNumber  = $jsonPayload['phoneNumber'];
+    $emailAddress = $jsonPayload['emailAddress'];
+    $userID       = $jsonPayload['userID'];
 
     // MySQL query to add the contact to the database
     $result = $dbConnection->query("INSERT INTO Contacts (firstName, lastName, phoneNumber, emailAddress, userID) VALUES ('$firstName', '$lastName', '$phoneNumber', '$emailAddress', '$userID')");
@@ -174,7 +174,7 @@ function addContact($dbConnection, $jsonPayload)
 function deleteContact($dbConnection, $jsonPayload)
 {
     // Get the contact's id from JSON payload
-    $contactID = $jsonPayload["id"];
+    $contactID = $jsonPayload['id'];
 
     // MySQL query to delete the contact from the database
     $result = $dbConnection->query("DELETE FROM Contacts WHERE id=$contactID");
