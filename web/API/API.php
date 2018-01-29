@@ -103,7 +103,7 @@ function createUser($dbConnection, $jsonPayload)
     } else {
         // This block uses prepared statements and parameterized queries to protect against SQL injection
         // MySQL query to check if a username already exists in the database
-        $query = $dbConnection->prepare("SELECT * FROM Users WHERE username='?'");
+        $query = $dbConnection->prepare("SELECT * FROM Users WHERE username = ?");
         $query->bind_param('s', $username);
         $query->execute();
 
@@ -121,7 +121,7 @@ function createUser($dbConnection, $jsonPayload)
 
         // This block uses prepared statements and parameterized queries to protect against SQL injection
         // MySQL query to add the username and password into the database
-        $query = $dbConnection->prepare("INSERT INTO Users (username, password) VALUES ('?', '?')");
+        $query = $dbConnection->prepare("INSERT INTO Users (username, password) VALUES (?, ?)");
         $query->bind_param('ss', $username, $hashedPassword);
         $query->execute();
 
