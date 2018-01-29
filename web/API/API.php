@@ -249,17 +249,26 @@ function getContacts($dbConnection, $jsonPayload)
     returnSuccess('Contacts found.', $searchResults);
 }
 
+/**
+ * Get all contacts matching a user-defined search criteria
+ *
+ * @param mysqli $dbConnection MySQL connection instance
+ * @param object $jsonPayload Decoded JSON stdClass object
+ */
 function searchContacts($dbConnection, $jsonPayload)
 {
-    // Get the user's id from JSON payload
+    // Get the user's id and search parameters from JSON payload
     $userID       = $jsonPayload['userID'];
     $searchOption = $jsonPayload['searchOption'];
     $searchFor    = $jsonPayload['searchFor'];
 
     // This block uses prepared statements and parameterized queries to protect against SQL injection
-    // MySQL query to get ALL contacts associated with the user in the database
-    $query = $dbConnection->prepare("SELECT * FROM Contacts WHERE userID = $userID AND $searchOption = ?");
-    $query->bind_param('s', $searchFor);
+    // MySQL query to get ALL contacts matching the search criteria for ANY column
+    $query = "SELECT * FROM Contacts WHERE userID = $userID AND (";
+    $query .= "firstName LIKE '%?%' OR lastName LIKE '%?%' OR ";
+    $query .= "phoneNumber LIKE '%?%' OR emailAddress LIKE '%?%')";
+    $query = $dbConnection->prepare($query);
+    $query->bind_param('ssss', $searchFor, $searchFor, $searchFor, $searchFor);
     $query->execute();
 
     // Result from the query
