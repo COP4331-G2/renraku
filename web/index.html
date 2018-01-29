@@ -1,65 +1,290 @@
 <html>
 
 <head>
-  <title>***COP4331-G2 Contact List***</title>
-  <script type="text/javascript" src="js/code.js"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  <link href="css/styles.css" rel="stylesheet">
+		<script type="text/javascript" src="js/code.js"></script>
+	  <meta charset="utf-8">
+	  <meta name="viewport" content="width=device-width, initial-scale=1">
+	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<!--<link href="css/styles.css" rel="stylesheet"> -->
+
 </head>
+<header>
+	<title>Renraku</title>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  		<a class="navbar-brand" href="#">Renraku</a>
 
-<body>
-<h1>COP4331-G2 Contact List</h1>
-<div id="loginDiv">
-  Login: <input type="text" id="username"><br />
-  Password: <input type="password" id="password"><br />
-  <button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Do It </button>
-  <span id="loginResult"></span>
-</div>
-<div id="loggedInDiv" style="display:none; visibility:hidden;">
-  <button type="button" id="logoutButton" class="buttons" onclick="doLogout();"> Log Out </button>
-</div>
-<div id="postLoginDiv">
-  <div id="searchUIDiv">
-      <input id="searchBox" type="text" name="contact"/>
-      <input id="searchBoxSubmit" type="button" name="submit" onclick="searchContacts();"value="submit"/>
-      First Name<input id="firstName" class="searchByRadioButton" type="radio" name="contact"/>
-      Last Name<input id="lastName" class="searchByRadioButton" type="radio" name="contact"/>
-      Phone Number<input id="phoneNumber" class="searchByRadioButton" type="radio" name="contact"/>
-      Email Address<input id="emailAddress" class="searchByRadioButton" type="radio" name="contact"/>
-      <p id="searchingContactsErrorMessage"></p>
-  </div>
-  <div id="tableUIDiv">
-    <table class="table-bordered table-condensed" id="contactsTable">
-    </table>
-  </div>
-  <div id="tableControlUIDiv">
-    <input type="button" value="Add" onclick="showAddContactDiv();"/>
-    <input id="showDeleteMarks" type="button" value="Delete" onclick="selectContactsToDelete();"/>
-    <input id="confirmDelete" style="visibility: hidden; display: none;" type="button" value="confirm Delete" onclick="deleteContacts();"/>
-    <p id="deletingContactsErrorMessage"></p>
-  </div>
-  <div id="addContactUIDiv" style="display:none; visibility:hidden;">
-    <input id="firstN" type="text"/>
-    <input id="lastN" type="text"/>
-    <input id="phoneN" type="text"/>
-    <input id="email" type="text"/>
-    <input id="confirmAdd" type="button" onclick="addContact();" value="Confirm"/>
-    <p id="addingContactsErrorMessage"></p>
-  </div>
-</div>
-</body>
+			<!-- div for Search and Add Contacts buttons
+						->Hidden on homepage, visible on logged in
+						->ID: loggedInButtonsDiv    					-->
+				<div id="loggedInButtonsDiv">
+					<form class="form-inline mr-sm-2 my-2 my-lg-0">
+			</form>
+				</div>
 
-<script>
-  var input = document.getElementById("password");
-  input.addEventListener("keyup", function(event) {
-      event.preventDefault();
-      if (event.keyCode === 13) {
-          document.getElementById("loginButton").click();
-      }
-  });
-</script>
+				<!-- UL class to seperate button spacing on navbar -->
+  		<ul class="navbar-nav mr-auto mt-2 mt-md-0">
+    	</ul>
+
+			<!-- Div for navbar buttons
+		 				->Visible on homepage, hidden while logged in
+						->ID: loginDiv	-->
+	  	<form class="form-inline mr-sm-2 my-2 my-lg-0" >
+				<div id="loginDiv">
+	    		<input class="form-control mr-sm-2 mr-sm-2" id="loginName" type="text" placeholder="Username" aria-label="Username">
+	    		<input class="form-control mr-sm-2" id="loginPassword" type="password" placeholder="Password" aria-label="Password">
+	    		<button type="button" class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" onclick="doLogin();" >Login</button>
+	    		<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#signupModal">
+			    Sign Up
+			  	</button>
+
+			  	<div class="container">
+			  		<!-- The Modal -->
+				  <div class="modal fade" id="signupModal">
+				    <div class="modal-dialog">
+				      <div class="modal-content">
+
+				        <!-- Modal Header -->
+				        <div class="modal-header">
+				          <h4 class="modal-title">Sign Up</h4>
+				          <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        </div>
+
+				        <!-- Modal body -->
+				        <div class="modal-body">
+				          	<div class="card">
+								<div class="card-body">
+									<!-- Form for creating a new account/new user. Form IDs:
+												->Username input field: createUser
+												->Password input field: createPassword
+												->Password confirmation: confirmPassowrd
+												->Button for Sign Up Submission: signUpButton -->
+									<form>
+									  <div class="form-row">
+											<div class="form-group col-md-3"></div>
+									    <div class="form-group col-md-6">
+										      <label for="createUser">Username</label>
+										      <input type="text" class="form-control" id="createUser" placeholder="Username">
+
+													</br>
+
+										      <label for="createPassword">Password</label>
+										      <input type="password" class="form-control" id="createPassword" placeholder="Password">
+
+													</br>
+
+										    	<label for="confirmPassword">Confirm Password</label>
+										    	<input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+									  	</div>
+										</div>
+									</form>
+								</div>
+
+						</div>				        </div>
+
+				        <!-- Modal footer -->
+				        <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Creat Account</button>
+				          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				        </div>
+
+				      </div>
+				    </div>
+				  </div>
+			  	</div>
+
+
+
+				</div>
+
+				<!-- div for logout button and "Logged in as" text
+						->Hidden on homepage, always shown while logged in
+					 	->id = loggedInDiv	-->
+				<div id="loggedinDiv" class="form-row" style="display:none; visibility:hidden">
+					<ul class="navbar-nav mr-2 mt-md-0 ">
+
+						<!-- span containing "logged in text"
+									->Empty on homepage, always userLastName, userFirstName while logged in
+									->id = loggedInUserFullName	-->
+						<li class="nav-item navbar-text">Logged in as<span class="navbar-text" id=loggedInUserFullName></span></li>
+			    </ul>
+				<button type="button" class="btn btn-danger" id="logoutButton" onclick="doLogout();">Logout</button>
+			</div>
+  		</form>
+	</nav>
+</header>
+
+
+<div class="container">
+	<body>
+		<br></br>
+		<!-- Div for the homepage Welcome
+	 			->Shown when on homepage
+				->ID: homepageWelcomeDiv	-->
+		<div id="homepageWelcomeDiv" class="container-fluid mt-4 bg-light" style="display:none; visibility:hidden;">
+			<div class="row">
+				<div class="col">
+					<h1 class="display-2 text-center">Welcome to</h1></br><h1 class="display-1 text-center">Renroku</h1>
+				</div>
+			</div>
+		</div>
+
+	<span id="loginResult"> </span>
+
+		<!-- Div that dispalys contacts and search bar
+	 			->Hidden on homepage, shown while on contact List
+			->id = accessUIDiv
+			-> Function for searching a contact changed from: searchColor() To: searchContact()
+		  -> ID for search contact result changed from: colorSearchResult To: contactSearchResult	-->
+			<div id="accessUIDiv" style="display:none; visibility:hidden;">
+				<div class="card">
+					<div class="card-header">
+							<form class="form-inline mr-sm-2 my-2 my-lg-0">
+									<input type="text" class="form-control col-sm-6" id="searchText" placeholder="Search Contacts" oninput="searchContacts();">
+
+									<span class="col-md-2" id="contactSearchResult"></span>
+									<button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger my-2 my-sm-0 mr-2 col-md-2">Delete Contacts</button>
+									<button type="button" id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();" class="btn btn-danger col-md-2">Confirm Delete</button>
+									<button type="button" class="btn btn-primary col-md-2" data-toggle="modal" data-target="#myModal">
+									  Add New Contact
+									</button>
+
+							</form>
+					</div>
+						<div class="card-body">
+
+							<!-- Table that will dsiplay the contacts
+										->id = contactsTable	-->
+							<table class="table" id="contactsTable">
+							</table>
+						</div>
+							<div class="card-footer">
+								C Renraku
+							</div>
+				</div>
+
+				<!-- New Contact Modal -->
+				<div class="modal fade" id="myModal">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+
+				      <!-- Modal Header -->
+				      <div class="modal-header">
+				        <h4 class="modal-title">Add New Contact</h4>
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				      </div>
+
+				      <!-- Modal body -->
+				      <div class="container">
+					      <div class="modal-body">
+							<div class="card">
+								<div class="card-body">
+
+									<!-- Form for adding a new contact. IDs:
+								 				->ID for First Name field: firstNameNewEntry
+												->ID for Last Name field: lastNameNewEntry
+												->ID for E-Mail field: emailNewEntry
+												->ID for Phone Number field: phoneNewEntry	-->
+									<form>
+										<div class="form-row">
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="FirstName">First Name</label>
+													<input type="text" class="form-control" id="firstNameNewEntry" placeholder="First Name">
+												</div>
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="LastName">Last Name</label>
+													<input type="text" class="form-control" id="lastNameNewEntry" placeholder="Last Name">
+												</div>
+											</div>
+											<div class="form-row">
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="inputEmail4">E-Mail</label>
+													<input type="email" class="form-control" id="emailNewEntry" placeholder="E-Mail Address">
+												</div>
+												<div class="form-group col-sm-6 col-md-6">
+													<label for="LastName">Phone Number</label>
+													<input type="text" class="form-control" id="phoneNewEntry" placeholder="Phone Number">
+												</div>
+										</div>
+
+										<!-- Buttons to create and cancel creating a contact
+													->Function for creating a contact changed from: addColor() To: addContact()
+													->ID for create contact button changed from: addColorButton To: addContactButton
+													->Cancel creating a contact button ID: cancelContactButton	-->
+										</div>
+									</form>
+								</div>
+
+						</div>
+				      </div>
+
+				      <!-- Modal footer -->
+				      <div class="modal-footer">
+				      <button type="button" class="btn btn-secondary" id="addContactButton" onclick="addContact();" data-dismiss="modal">Add Contact</button>
+				        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+				        <span id="contactAddResult"></span>
+				      </div>
+
+				    </div>
+				  </div>
+				</div>
+				</div>
+
+			</div>
+
+		</body>
+	</div>
+
+	<script>
+		var input = document.getElementById("loginPassword");
+		input.addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode === 13) {
+		        document.getElementById("loginButton").click();
+		    }
+		});
+	</script>
+
+	<script>
+		var input = document.getElementById("firstNameNewEntry");
+		input.addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode === 13) {
+		        document.getElementById("addContactButton").click();
+		    }
+		});
+	</script>
+
+	<script>
+		var input = document.getElementById("lastNameNewEntry");
+		input.addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode === 13) {
+		        document.getElementById("addContactButton").click();
+		    }
+		});
+	</script>
+
+	<script>
+		var input = document.getElementById("emailNewEntry");
+		input.addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode === 13) {
+		        document.getElementById("addContactButton").click();
+		    }
+		});
+	</script>
+
+	<script>
+		var input = document.getElementById("phoneNewEntry");
+		input.addEventListener("keyup", function(event) {
+		    event.preventDefault();
+		    if (event.keyCode === 13) {
+		        document.getElementById("addContactButton").click();
+		    }
+		});
+	</script>
 
 </html>

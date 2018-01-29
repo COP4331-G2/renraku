@@ -158,6 +158,11 @@ function addContact()
   hideOrShow("addContactDiv", false);
   hideOrShow( "accessUIDiv", true);
 
+  document.getElementById("firstNameNewEntry").value = "";
+  document.getElementById("lastNameNewEntry").value = "";
+  document.getElementById("emailNewEntry").value = "";
+  document.getElementById("phoneNewEntry").value = "";
+
   console.log(jsonPayload);
 }
 
