@@ -1,5 +1,6 @@
 const API = "API/API.php";
 var userCurrentlyLogged;
+var tableData;
 
 /**
  * Attempt to login with the supplied username and password
@@ -187,7 +188,8 @@ function fillTable()
               console.log(xhr.responseText);
                 var jsonObject = JSON.parse( xhr.responseText );
                 buildTableHeader();
-                buildTableData(jsonObject);
+                buildTableData(jsonObject.results);
+                tableData = jsonObject.results;
             }
         };
         xhr.send(jsonPayload);
@@ -227,67 +229,12 @@ function deleteContacts()
 
 function searchContacts()
 {
-  var nodeList = document.getElementsByClassName("searchByRadioButton");
-  var chosenSearchOption;
-
-  if(!nodeList)
-  {
-    console.log("radio buttons not currently available");
-    return;
-  }
-
-  for(var i = 0; i < nodeList.length; i++)
-  {
-    if(nodeList[i].checked)
-    {
-      chosenSearchOption = nodeList[i];
-      break;
-    }
-    if(i == 3 && !nodeList[i].checked)
-    {
-      console.log("the user has not selected any radio button to search by");
-      var errorMessage = document.getElementById("searchingContactsErrorMessage");
-      errorMessage.innerHTML = "must select an option to search by";
-      return;
-    }
-  }
   var typedSearch = document.getElementById("searchBox").value;
-  var searchOption = chosenSearchOption.id;
-
-  if(!typedSearch)
-  {
-    console.log("you are searching for a blank string");
-    var errorMessage = document.getElementById("searchingContactsErrorMessage");
-    errorMessage.innerHTML = "you are searching for a blank string";
-    return;
-  }
-
-  var searchOp = '"searchOption" : "' + searchOption +'"';
-  var search = '"searchFor" : "' + typedSearch +'",';
-  var user = '"userID" : "' + userCurrentlyLogged +'",';
-  var functionName = '"function" : "searchContacts",';
-  var jsonPayload = "{"+functionName+user+search+searchOp+"}";
-  console.log(jsonPayload);
-
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", API, true);
-  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-  try {
-      xhr.onreadystatechange = function() {
-
-          if (this.readyState == 4 && this.status == 200) {
-            console.log(xhr.responseText);
-              var jsonObject = JSON.parse( xhr.responseText );
-              var errorMessage = document.getElementById("searchingContactsErrorMessage");
-              errorMessage.innerHTML = "";
-              buildTableHeader();
-              buildTableData(jsonObject);
-          }
-      };
-      xhr.send(jsonPayload);
-  } catch(err) {
-      console.log(err);
-  }
+  var filteredData = tableData.filter(function (item) {
+      return (stringContains(item.contactId, typedSearch) || stringContains(item.firstName, typedSearch) || stringContains(item.lastName, typedSearch) || stringContains(item.phoneNumber, typedSearch) || stringContains(item.emailAddress, typedSearch));
+  });
+  buildTableHeader();
+  buildTableData(filteredData);
 }
 
 
@@ -335,17 +282,17 @@ function buildTableData(data)
       console.log("data is not available");
       return;
     }
-    for (i = 0; i < data.results.length; i++) {
+    for (i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
-        tableRow.id = data.results[i].contactId;
+        tableRow.id = data[i].contactId;
         var firstName = document.createElement('td');
-        firstName.innerHTML = data.results[i].firstName;
+        firstName.innerHTML = data[i].firstName;
         var lastName = document.createElement('td');
-        lastName.innerHTML = data.results[i].lastName;
+        lastName.innerHTML = data[i].lastName;
         var phoneNumber = document.createElement('td');
-        phoneNumber.innerHTML = data.results[i].phoneNumber;
+        phoneNumber.innerHTML = data[i].phoneNumber;
         var emailAddress = document.createElement('td');
-        emailAddress.innerHTML = data.results[i].emailAddress;
+        emailAddress.innerHTML = data[i].emailAddress;
         var deleteButton = document.createElement('input');
         deleteButton.type = "checkbox";
         deleteButton.style.visibility = "hidden";
@@ -358,4 +305,9 @@ function buildTableData(data)
         tableRow.appendChild(deleteButton);
         tud.appendChild(tableRow);
     }
+}
+
+function stringContains(stringToCheck, substring)
+{
+    return stringToCheck.indexOf(substring) != -1;
 }
