@@ -2,6 +2,9 @@ const API = "API/API.php";
 var userCurrentlyLogged;
 var tableData;
 
+// var searchBox = document.getElementById("searchText");
+// searchBox.addEventListener("change", searchContacts());
+
 /**
  * Attempt to login with the supplied username and password
  */
@@ -61,7 +64,7 @@ function doLogin()
 }
 
 /**
- * Logout of a user's account
+ * Log of a user's account
  */
 function doLogout()
 {
@@ -152,7 +155,6 @@ function addContact()
   CallServerSide(jsonPayload);
   var errorMessage = document.getElementById("loginResult");
   errorMessage.innerHTML = "";
-  setTimeout(fillTable, 3000);
   hideOrShow("addContactDiv", false);
   hideOrShow( "accessUIDiv", true);
 
@@ -170,6 +172,7 @@ function CallServerSide(jsonPayload)
           if (this.readyState == 4 && this.status == 200) {
             console.log(xhr.responseText);
               var jsonObject = JSON.parse( xhr.responseText );
+              fillTable();
           }
       };
       xhr.send(jsonPayload);
@@ -232,7 +235,6 @@ function deleteContacts()
   }
   var errorMessage = document.getElementById("loginResult");
   errorMessage.innerHTML = "";
-  setTimeout(fillTable, 3000);
   hideOrShow("confirmDelete", false);
   hideOrShow("showDeleteMarks", true);
 
@@ -242,7 +244,7 @@ function deleteContacts()
 
 function searchContacts()
 {
-  var typedSearch = document.getElementById("searchBox").value;
+  var typedSearch = document.getElementById("searchText").value;
   var filteredData = tableData.filter(function (item) {
       return (stringContains(item.contactId, typedSearch) || stringContains(item.firstName, typedSearch) || stringContains(item.lastName, typedSearch) || stringContains(item.phoneNumber, typedSearch) || stringContains(item.emailAddress, typedSearch));
   });
@@ -332,5 +334,5 @@ function buildTableData(data)
 
 function stringContains(stringToCheck, substring)
 {
-    return stringToCheck.indexOf(substring) != -1;
+    return stringToCheck.toLowerCase().indexOf(substring.toLowerCase()) != -1;
 }

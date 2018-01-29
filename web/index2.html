@@ -45,7 +45,7 @@
 				<!-- div for logout button and "Logged in as" text
 						->Hidden on homepage, always shown while logged in
 					 	->id = loggedInDiv	-->
-				<div id="loggedinDiv" class="form-row" style="display:none; visibility:hidden;">
+				<div id="loggedinDiv" class="form-row">
 					<ul class="navbar-nav mr-2 mt-md-0 ">
 
 						<!-- span containing "logged in text"
@@ -115,7 +115,7 @@
 			<div id="accessUIDiv" style="display:none; visibility:hidden;">
 				<div class="card">
 					<div class="card-header">
-							<input type="text" class="form-control" id="searchText" placeholder="Search Contacts" onclick="searchContact();">
+							<input type="text" class="form-control" id="searchText" placeholder="Search Contacts" oninput="searchContacts();">
 							<span id="contactSearchResult"></span>
 					</div>
 						<div class="card-body">
@@ -190,7 +190,7 @@
 		</body>
 	</div>
 
-	<!--<script type="text/javascript" src="js/code.js"></script>
+	<script type="text/javascript" src="js/code.js"></script>
 
 	<script>
 		var input = document.getElementById("loginPassword");
@@ -201,7 +201,5 @@
 		    }
 		});
 	</script>
-
--->
 
 </html>
