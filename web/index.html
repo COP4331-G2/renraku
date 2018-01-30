@@ -13,15 +13,12 @@
 </head>
 <header>
     <title>Renraku</title>
-
-
 </header>
 
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-        <img style="height: 4%" src="images/renraku.png"><div class="col-sm-2"><a class="navbar-brand mt-0" href="#">連絡<hr class="mx-0 my-0"> <span style="font-size: 12px">Renraku</span> </a></div>
+        <img style="height: 4%" src="images/renraku.png">
+        <div class="col-sm-2"><a class="navbar-brand mt-0" href="#">連絡<hr class="mx-0 my-0"> <span style="font-size: 12px">Renraku</span> </a></div>
         <!-- div for Search and Add Contacts buttons
             ->Hidden on homepage, visible on logged in
             ->ID: loggedInButtonsDiv              -->
@@ -30,7 +27,6 @@
             </form>
         </div>
         <!-- UL class to seperate button spacing on navbar -->
-
         <!-- Div for navbar buttons
             ->Visible on homepage, hidden while logged in
             ->ID: loginDiv  -->
@@ -38,13 +34,11 @@
             <div id="loginDiv">
                 <input class="form-control mr-sm-2 mr-sm-2" id="loginName" type="text" placeholder="Username" aria-label="Username">
                 <input class="form-control mr-sm-2" id="loginPassword" type="password" placeholder="Password" aria-label="Password">
-                <button type="button" class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" onclick="doLogin();"><i class="fas fa-sign-in-alt mr-1"></i>
-
-Login</button>
+                <button type="button" class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" onclick="doLogin();"><i class="fas fa-sign-in-alt mr-1"></i> Login
+                </button>
                 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#signupModal">
                     <i class="fas fa-user-plus mr-1"></i>Sign Up
                 </button>
-
             </div>
             <!-- div for logout button and "Logged in as" text
             ->Hidden on homepage, always shown while logged in
@@ -105,9 +99,6 @@ Login</button>
             </div>
         </div>
     </div>
-
-
-
     <!-- Div for the homepage Welcome
         ->Shown when on homepage
         ->ID: homepageWelcomeDiv  -->
@@ -150,7 +141,7 @@ Login</button>
                     </table>
                 </div>
                 <div class="card-footer">
-                    C Renraku
+                    &copy; Renraku
                 </div>
             </div>
         </div>
@@ -199,7 +190,6 @@ Login</button>
                           ->Function for creating a contact changed from: addColor() To: addContact()
                           ->ID for create contact button changed from: addColorButton To: addContactButton
                           ->Cancel creating a contact button ID: cancelContactButton  -->
-
                                         </form>
                                     </div>
                                 </div>
@@ -216,62 +206,59 @@ Login</button>
             </div>
         </div>
     </div>
-
-
-
     <script>
-        var input = document.getElementById("loginPassword");
-        input.addEventListener("keyup", function(event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                document.getElementById("loginButton").click();
-            }
-        });
+    var input = document.getElementById("loginPassword");
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("loginButton").click();
+        }
+    });
     </script>
     <script>
-        var input = document.getElementById("firstNameNewEntry");
-        input.addEventListener("keyup", function(event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                document.getElementById("addContactButton").click();
-            }
-        });
+    var input = document.getElementById("firstNameNewEntry");
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("addContactButton").click();
+        }
+    });
     </script>
     <script>
-        var input = document.getElementById("lastNameNewEntry");
-        input.addEventListener("keyup", function(event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                document.getElementById("addContactButton").click();
-            }
-        });
+    var input = document.getElementById("lastNameNewEntry");
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("addContactButton").click();
+        }
+    });
     </script>
     <script>
-        var input = document.getElementById("emailNewEntry");
-        input.addEventListener("keyup", function(event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                document.getElementById("addContactButton").click();
-            }
-        });
+    var input = document.getElementById("emailNewEntry");
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("addContactButton").click();
+        }
+    });
     </script>
     <script>
-        var input = document.getElementById("phoneNewEntry");
-        input.addEventListener("keyup", function(event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                document.getElementById("addContactButton").click();
-            }
-        });
+    var input = document.getElementById("phoneNewEntry");
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("addContactButton").click();
+        }
+    });
     </script>
     <script>
-        var input = document.getElementById("confirmPassword");
-        input.addEventListener("keyup", function(event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                document.getElementById("createUserButton").click();
-            }
-        });
+    var input = document.getElementById("confirmPassword");
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.getElementById("createUserButton").click();
+        }
+    });
     </script>
 </body>
 
