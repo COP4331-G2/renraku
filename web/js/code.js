@@ -114,14 +114,8 @@ function hideOrShowByClass(elementClass, showState) {
     }
 }
 
-function showAddContactDiv() {
-    hideOrShow("addContactDiv", true);
-    hideOrShow("accessUIDiv", false);
-}
-
 function showAccessUIDiv() {
     hideOrShow("accessUIDiv", true);
-    hideOrShow("addContactDiv", false);
     unSelectContactsToDelete();
 }
 
@@ -131,10 +125,8 @@ function addContact() {
     var phoneNumber = document.getElementById("phoneNewEntry").value;
     var emailAddress = document.getElementById("emailNewEntry").value;
 
-    if (!firstName | !lastName | !phoneNumber | !emailAddress) {
-        console.log("must fill out all of the fields in order to add a contact");
-        var errorMessage = document.getElementById("loginResult");
-        errorMessage.innerHTML = "must fill out all of the fields in order to add a contact";
+    if (!firstName && !lastName && !phoneNumber && !emailAddress) {
+        document.getElementById("loginResult").innerHTML = "Cannot leave all contact information empty";
         return;
     }
 
@@ -148,19 +140,14 @@ function addContact() {
     };
     jsonPayload = JSON.stringify(jsonPayload);
 
-    console.log("the payload for add user was: " + jsonPayload);
     CallServerSide(jsonPayload);
-    var errorMessage = document.getElementById("loginResult");
-    errorMessage.innerHTML = "";
-    hideOrShow("addContactDiv", false);
+    document.getElementById("loginResult").innerHTML = "";
     hideOrShow("accessUIDiv", true);
 
     document.getElementById("firstNameNewEntry").value = "";
     document.getElementById("lastNameNewEntry").value = "";
     document.getElementById("emailNewEntry").value = "";
     document.getElementById("phoneNewEntry").value = "";
-
-    console.log(jsonPayload);
 }
 
 function CallServerSide(jsonPayload) {
@@ -171,7 +158,6 @@ function CallServerSide(jsonPayload) {
         xhr.onreadystatechange = function() {
 
             if (this.readyState == 4 && this.status == 200) {
-                console.log(xhr.responseText);
                 var jsonObject = JSON.parse(xhr.responseText);
                 fillTable();
             }
@@ -184,7 +170,6 @@ function CallServerSide(jsonPayload) {
 
 function fillTable() {
     if (!currentUserID) {
-        console.log("no user is currently logged on");
         return;
     }
 
@@ -193,20 +178,22 @@ function fillTable() {
         userID: currentUserID,
     };
     jsonPayload = JSON.stringify(jsonPayload);
+
     var xhr = new XMLHttpRequest();
     xhr.open("POST", API, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
     try {
         xhr.onreadystatechange = function() {
 
             if (this.readyState == 4 && this.status == 200) {
-                console.log(xhr.responseText);
                 var jsonObject = JSON.parse(xhr.responseText);
                 buildTableHeader();
                 buildTableData(jsonObject.results);
                 tableData = jsonObject.results;
             }
         };
+
         xhr.send(jsonPayload);
     } catch (err) {
         console.log(err);
@@ -216,16 +203,13 @@ function fillTable() {
 function deleteContacts() {
     var nodeList = document.getElementsByClassName("deleteButton");
 
-    console.log(nodeList);
-
     if (!nodeList) {
-        console.log("table hasnt loaded yet");
         return;
     }
+
     for (var i = 0; i < nodeList.length; i++) {
         if (nodeList[i].checked) {
             var contactID = nodeList[i].parentNode.parentNode.parentNode.id;
-            console.log("value is : " + contactID);
 
             var jsonPayload = {
                 function: "deleteContact",
@@ -233,7 +217,6 @@ function deleteContacts() {
             };
             jsonPayload = JSON.stringify(jsonPayload);
 
-            console.log(jsonPayload);
             CallServerSide(jsonPayload);
         }
         if (i == nodeList.length - 1) break;
@@ -277,7 +260,6 @@ function doCreateAccount() {
     try {
         //send the xml request
         xhr.send(jsonPayload);
-        console.log("*" + xhr.responseText);
 
         var jsonObject = JSON.parse(xhr.responseText);
 
@@ -357,13 +339,11 @@ function buildTableData(data) {
     var tud = document.getElementById("contactsTable");
     var i;
     if (!data) {
-        console.log("data is not available");
         return;
     }
     for (i = 0; i < data.length; i++) {
-        var tableRow = document.createElement('tr');
+        var tableRow =document.createElement('tr');
         tableRow.id = data[i].contactId;
-        console.log(tableRow.id);
         var firstName = document.createElement('td');
         firstName.innerHTML = data[i].firstName;
         var lastName = document.createElement('td');
