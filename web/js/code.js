@@ -17,9 +17,9 @@ function doLogin() {
 
     // Setup the JSON payload to send to the API
     var jsonPayload = {
-        function: "loginAttempt",
-        username: username,
-        username: password,
+        "function": "loginAttempt",
+        "username": username,
+        "password": password,
     };
     jsonPayload = JSON.stringify(jsonPayload);
     console.log("JSON Payload: " + jsonPayload);
