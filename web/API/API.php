@@ -201,7 +201,7 @@ function deleteContact($dbConnection, $jsonPayload)
     $contactID = $jsonPayload['id'];
 
     // MySQL query to delete the contact from the database
-    $result = $dbConnection->query("DELETE FROM Contacts WHERE id=$contactID");
+    $result = $dbConnection->query("DELETE FROM Contacts WHERE id = $contactID");
 
     // Check to see if the deletion was successful...
     if ($result) {

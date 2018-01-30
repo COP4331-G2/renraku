@@ -51,7 +51,7 @@ function doLogin()
         hideOrShow( "loginDiv", false);
 
         // Show the post-login HTML elements
-        hideOrShow( "loggedInDiv", true);
+        hideOrShow( "loggedinDiv", true);
         hideOrShow( "accessUIDiv", true);
 
         // Fill the user's contacts table
@@ -69,7 +69,7 @@ function doLogin()
 function doLogout()
 {
     // Hide the post-login HTML elements
-    hideOrShow("loggedInDiv", false);
+    hideOrShow("loggedinDiv", false);
     hideOrShow("accessUIDiv", false);
 
     // Show the login HTML elements
@@ -220,6 +220,8 @@ function deleteContacts()
 {
   var nodeList = document.getElementsByClassName("deleteButton");
 
+  console.log(nodeList);
+
   if(!nodeList)
   {
     console.log("table hasnt loaded yet");
@@ -229,11 +231,12 @@ function deleteContacts()
   {
     if(nodeList[i].checked)
     {
-      var value = nodeList[i].parentNode.id;
+      var value = nodeList[i].parentNode.parentNode.parentNode.id;
       console.log("value is : " + value);
       var contactId = '"id" : "' + value + '"' ;
       var functionName = '"function" : "deleteContact",';
       var jsonPayload = "{"+functionName+contactId+"}";
+      console.log(jsonPayload);
       CallServerSide(jsonPayload);
     }
     if(i == nodeList.length - 1) break;
@@ -373,6 +376,7 @@ function buildTableData(data)
     for (i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
         tableRow.id = data[i].contactId;
+        console.log(tableRow.id);
         var firstName = document.createElement('td');
         firstName.innerHTML = data[i].firstName;
         var lastName = document.createElement('td');
