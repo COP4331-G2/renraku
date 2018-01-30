@@ -53,6 +53,9 @@ function doLogin() {
         // Hide the login HTML elements
         hideOrShow("loginDiv", false);
 
+        // Hide the landing page
+        hideOrShow("landingPageDiv", false);
+
         // Show the post-login HTML elements
         hideOrShow("loggedinDiv", true);
         hideOrShow("accessUIDiv", true);
@@ -75,6 +78,7 @@ function doLogout() {
 
     // Show the login HTML elements
     hideOrShow("loginDiv", true);
+    hideOrShow("landingPageDiv", true);
 }
 
 /**
