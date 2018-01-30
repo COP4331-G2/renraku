@@ -17,9 +17,9 @@ function doLogin() {
 
     // Setup the JSON payload to send to the API
     var jsonPayload = {
-        "function": "loginAttempt",
-        "username": username,
-        "password": password,
+        function: "loginAttempt",
+        username: username,
+        password: password,
     };
     jsonPayload = JSON.stringify(jsonPayload);
     console.log("JSON Payload: " + jsonPayload);
@@ -129,23 +129,25 @@ function addContact() {
     var firstName = document.getElementById("firstNameNewEntry").value;
     var lastName = document.getElementById("lastNameNewEntry").value;
     var phoneNumber = document.getElementById("phoneNewEntry").value;
-    var email = document.getElementById("emailNewEntry").value;
+    var emailAddress = document.getElementById("emailNewEntry").value;
 
-    if (!firstName | !lastName | !phoneNumber | !email) {
+    if (!firstName | !lastName | !phoneNumber | !emailAddress) {
         console.log("must fill out all of the fields in order to add a contact");
         var errorMessage = document.getElementById("loginResult");
         errorMessage.innerHTML = "must fill out all of the fields in order to add a contact";
         return;
     }
 
-    var fName = '"firstName" : "' + firstName + '",';
-    var lName = '"lastName" : "' + lastName + '",';
-    var phone = '"phoneNumber" : "' + phoneNumber + '",';
-    var emailAddress = '"emailAddress" : "' + email + '",';
-    var functionName = '"function" : "addContact",';
-    var user = '"userID" : "' + currentUserID + '"';
+    var jsonPayload = {
+        function: "addContact",
+        firstName: firstName,
+        lastName: lastName,
+        phoneNumber: phoneNumber,
+        emailAddress: emailAddress,
+        userID: currentUserID,
+    };
+    jsonPayload = JSON.stringify(jsonPayload);
 
-    var jsonPayload = "{" + functionName + fName + lName + phone + emailAddress + user + "}";
     console.log("the payload for add user was: " + jsonPayload);
     CallServerSide(jsonPayload);
     var errorMessage = document.getElementById("loginResult");
@@ -181,13 +183,16 @@ function CallServerSide(jsonPayload) {
 }
 
 function fillTable() {
-    var id = currentUserID;
-
-    if (!id) {
+    if (!currentUserID) {
         console.log("no user is currently logged on");
         return;
     }
-    var jsonPayload = '{"function": "getContacts", "userID" : "' + id + '"}';
+
+    var jsonPayload = {
+        function: "getContacts",
+        userID: currentUserID,
+    };
+    jsonPayload = JSON.stringify(jsonPayload);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", API, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -219,11 +224,15 @@ function deleteContacts() {
     }
     for (var i = 0; i < nodeList.length; i++) {
         if (nodeList[i].checked) {
-            var value = nodeList[i].parentNode.parentNode.parentNode.id;
-            console.log("value is : " + value);
-            var contactId = '"id" : "' + value + '"';
-            var functionName = '"function" : "deleteContact",';
-            var jsonPayload = "{" + functionName + contactId + "}";
+            var contactID = nodeList[i].parentNode.parentNode.parentNode.id;
+            console.log("value is : " + contactID);
+
+            var jsonPayload = {
+                function: "deleteContact",
+                id: contactID,
+            };
+            jsonPayload = JSON.stringify(jsonPayload);
+
             console.log(jsonPayload);
             CallServerSide(jsonPayload);
         }
