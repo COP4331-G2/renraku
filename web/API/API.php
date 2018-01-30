@@ -140,22 +140,6 @@ function createUser($dbConnection, $jsonPayload)
 }
 
 /**
- * Delete a user account (and all associated contacts)
- *
- * @param mysqli $dbConnection MySQL connection instance
- * @param object $jsonPayload Decoded JSON stdClass object
- */
-function deleteUser($dbConnection, $jsonPayload)
-{
-    /* Not yet implemented */
-
-    // Will need to get the user's id
-    // Then iterate through all contacts and delete them (via deleteContact())
-    // Then delete the user itself
-
-}
-
-/**
  * Add a contact to a user's account
  *
  * @param mysqli $dbConnection MySQL connection instance
@@ -225,54 +209,7 @@ function getContacts($dbConnection, $jsonPayload)
     $userID = $jsonPayload['userID'];
 
     // MySQL query to get ALL contacts associated with the user in the database
-    $result = $dbConnection->query("SELECT * FROM Contacts WHERE userID=$userID");
-
-    // Setup an array to store multiple contact information
-    $searchResults = [];
-
-    // Iterate through all found contacts to store their information
-    while ($row = $result->fetch_assoc()) {
-        // Column information for a contact
-        $contactInformation = [
-            'contactId'    => $row['id'],
-            'firstName'    => $row['firstName'],
-            'lastName'     => $row['lastName'],
-            'phoneNumber'  => $row['phoneNumber'],
-            'emailAddress' => $row['emailAddress'],
-        ];
-
-        // Append this information to the searchResults array
-        $searchResults[] = $contactInformation;
-    }
-
-    // Return the built searchResults array prepared for a JSON response
-    returnSuccess('Contacts found.', $searchResults);
-}
-
-/**
- * Get all contacts matching a user-defined search criteria
- *
- * @param mysqli $dbConnection MySQL connection instance
- * @param object $jsonPayload Decoded JSON stdClass object
- */
-function searchContacts($dbConnection, $jsonPayload)
-{
-    // Get the user's id and search parameters from JSON payload
-    $userID       = $jsonPayload['userID'];
-    $searchOption = $jsonPayload['searchOption'];
-    $searchFor    = $jsonPayload['searchFor'];
-
-    // This block uses prepared statements and parameterized queries to protect against SQL injection
-    // MySQL query to get ALL contacts matching the search criteria for ANY column
-    $query = "SELECT * FROM Contacts WHERE userID = $userID AND (";
-    $query .= "firstName LIKE '%?%' OR lastName LIKE '%?%' OR ";
-    $query .= "phoneNumber LIKE '%?%' OR emailAddress LIKE '%?%')";
-    $query = $dbConnection->prepare($query);
-    $query->bind_param('ssss', $searchFor, $searchFor, $searchFor, $searchFor);
-    $query->execute();
-
-    // Result from the query
-    $result = $query->get_result();
+    $result = $dbConnection->query("SELECT * FROM Contacts WHERE userID = $userID");
 
     // Setup an array to store multiple contact information
     $searchResults = [];

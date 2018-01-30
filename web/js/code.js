@@ -1,15 +1,13 @@
+// Constant value for API path (for ease of use)
 const API = "API/API.php";
-var userCurrentlyLogged;
-var tableData;
 
-// var searchBox = document.getElementById("searchText");
-// searchBox.addEventListener("change", searchContacts());
+var currentUserID;
+var tableData;
 
 /**
  * Attempt to login with the supplied username and password
  */
-function doLogin()
-{
+function doLogin() {
     // Get the username and password from the HTML fields
     var username = document.getElementById("loginName").value;
     var password = document.getElementById("loginPassword").value;
@@ -18,7 +16,12 @@ function doLogin()
     document.getElementById("loginResult").innerHTML = "";
 
     // Setup the JSON payload to send to the API
-    var jsonPayload = '{"function": "loginAttempt", "username": "' + username + '", "password": "' + password + '"}';
+    var jsonPayload = {
+        function: "loginAttemp",
+        username: username,
+        username: password,
+    };
+    jsonPayload = JSON.stringify(jsonPayload);
     console.log("JSON Payload: " + jsonPayload);
 
     // Setup the HMLHttpRequest
@@ -30,15 +33,15 @@ function doLogin()
     try {
         // Send the XMLHttpRequest
         xhr.send(jsonPayload);
-        console.log("***" + xhr.responseText);
+        console.log("JSON Response: " + xhr.responseText);
 
         // Parse the JSON returned from the request
         var jsonObject = JSON.parse(xhr.responseText);
-        console.log('current user:' + jsonObject.results);
-        userCurrentlyLogged = jsonObject.results;
+        currentUserID = jsonObject.results;
+        console.log("Current UserID: " + currentUserID);
 
         // If the returned JSON contains an error then set the HTML login result message
-        if (jsonObject.error) {
+        if (jsonObject.error || !jsonObject.success) {
             document.getElementById("loginResult").innerHTML = jsonObject.error;
             return;
         }
@@ -48,26 +51,24 @@ function doLogin()
         document.getElementById("loginPassword").value = "";
 
         // Hide the login HTML elements
-        hideOrShow( "loginDiv", false);
+        hideOrShow("loginDiv", false);
 
         // Show the post-login HTML elements
-        hideOrShow( "loggedinDiv", true);
-        hideOrShow( "accessUIDiv", true);
+        hideOrShow("loggedinDiv", true);
+        hideOrShow("accessUIDiv", true);
 
         // Fill the user's contacts table
         fillTable();
-    } catch(e) {
+    } catch (e) {
         // If there is an error parsing the JSON, attempt to set the HTML login result message
         document.getElementById("loginResult").innerHTML = e.message;
     }
-
 }
 
 /**
  * Log of a user's account
  */
-function doLogout()
-{
+function doLogout() {
     // Hide the post-login HTML elements
     hideOrShow("loggedinDiv", false);
     hideOrShow("accessUIDiv", false);
@@ -82,118 +83,109 @@ function doLogout()
  * @param string elementId HTML element to be made visible/hidden
  * @param boolean showState Whether or not to show an element
  */
-function hideOrShow(elementId, showState)
-{
+function hideOrShow(elementId, showState) {
     var componentToChange = document.getElementById(elementId);
+
     // Set the visibility based on showState
-    if(!componentToChange)
-    {
-      console.log("element: "+elementId+" is either not currently available or is not a valid id name");
-      return;
+    if (!componentToChange) {
+        console.log("Element (" + elementId + ") is either not currently available or is not a valid id name");
+        return;
     }
+
+    // Set the visibility based on showState
     componentToChange.style.visibility = showState ? "visible" : "hidden";
 
     // Set the display based on showState
     componentToChange.style.display = showState ? "block" : "none";
 }
 
-function hideOrShowByClass(elementClass, showState)
-{
-  var  nodeList = document.getElementsByClassName(elementClass);
+function hideOrShowByClass(elementClass, showState) {
+    var nodeList = document.getElementsByClassName(elementClass);
 
-  if(!nodeList)
-  {
-    console.log("element: "+elementClass+" is either not currently available or is not a valid id name");
-    return;
-  }
+    if (!nodeList) {
+        console.log("Element (" + elementClass + ") is either not currently available or is not a valid id name");
+        return;
+    }
 
-  for(var i =0; i < nodeList.length; i++)
-  {
-    var node = nodeList[i];
-    node.style.visibility = showState ? "visible" : "hidden";
-    node.style.display = showState ? "block" : "none";
-  }
+    for (var i = 0; i < nodeList.length; i++) {
+        var node = nodeList[i];
+        node.style.visibility = showState ? "visible" : "hidden";
+        node.style.display = showState ? "block" : "none";
+    }
 }
 
-function showAddContactDiv()
-{
-  hideOrShow("addContactDiv", true);
-  hideOrShow( "accessUIDiv", false);
+function showAddContactDiv() {
+    hideOrShow("addContactDiv", true);
+    hideOrShow("accessUIDiv", false);
 }
 
-function showAccessUIDiv()
-{
-  hideOrShow("accessUIDiv", true);
-  hideOrShow( "addContactDiv", false);
-  unSelectContactsToDelete();
-
+function showAccessUIDiv() {
+    hideOrShow("accessUIDiv", true);
+    hideOrShow("addContactDiv", false);
+    unSelectContactsToDelete();
 }
 
-function addContact()
-{
-  var firstName = document.getElementById("firstNameNewEntry").value;
-  var lastName = document.getElementById("lastNameNewEntry").value;
-  var phoneNumber = document.getElementById("phoneNewEntry").value;
-  var email = document.getElementById("emailNewEntry").value;
-  if(!firstName | !lastName | !phoneNumber | !email)
-  {
-    console.log("must fill out all of the fields in order to add a contact");
+function addContact() {
+    var firstName = document.getElementById("firstNameNewEntry").value;
+    var lastName = document.getElementById("lastNameNewEntry").value;
+    var phoneNumber = document.getElementById("phoneNewEntry").value;
+    var email = document.getElementById("emailNewEntry").value;
+
+    if (!firstName | !lastName | !phoneNumber | !email) {
+        console.log("must fill out all of the fields in order to add a contact");
+        var errorMessage = document.getElementById("loginResult");
+        errorMessage.innerHTML = "must fill out all of the fields in order to add a contact";
+        return;
+    }
+
+    var fName = '"firstName" : "' + firstName + '",';
+    var lName = '"lastName" : "' + lastName + '",';
+    var phone = '"phoneNumber" : "' + phoneNumber + '",';
+    var emailAddress = '"emailAddress" : "' + email + '",';
+    var functionName = '"function" : "addContact",';
+    var user = '"userID" : "' + currentUserID + '"';
+
+    var jsonPayload = "{" + functionName + fName + lName + phone + emailAddress + user + "}";
+    console.log("the payload for add user was: " + jsonPayload);
+    CallServerSide(jsonPayload);
     var errorMessage = document.getElementById("loginResult");
-    errorMessage.innerHTML = "must fill out all of the fields in order to add a contact";
-    return;
-  }
+    errorMessage.innerHTML = "";
+    hideOrShow("addContactDiv", false);
+    hideOrShow("accessUIDiv", true);
 
-  var fName = '"firstName" : "' + firstName +'",';
-  var lName = '"lastName" : "' + lastName +'",';
-  var phone = '"phoneNumber" : "' + phoneNumber +'",';
-  var emailAddress = '"emailAddress" : "' + email +'",';
-  var functionName = '"function" : "addContact",';
-  var user = '"userID" : "' + userCurrentlyLogged +'"';
+    document.getElementById("firstNameNewEntry").value = "";
+    document.getElementById("lastNameNewEntry").value = "";
+    document.getElementById("emailNewEntry").value = "";
+    document.getElementById("phoneNewEntry").value = "";
 
-  var jsonPayload = "{"+functionName+fName+lName+phone+emailAddress+user+"}";
-  console.log("the payload for add user was: "+jsonPayload);
-  CallServerSide(jsonPayload);
-  var errorMessage = document.getElementById("loginResult");
-  errorMessage.innerHTML = "";
-  hideOrShow("addContactDiv", false);
-  hideOrShow( "accessUIDiv", true);
-
-  document.getElementById("firstNameNewEntry").value = "";
-  document.getElementById("lastNameNewEntry").value = "";
-  document.getElementById("emailNewEntry").value = "";
-  document.getElementById("phoneNewEntry").value = "";
-
-  console.log(jsonPayload);
+    console.log(jsonPayload);
 }
 
-function CallServerSide(jsonPayload)
-{
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", API, true);
-  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-  try {
-      xhr.onreadystatechange = function() {
+function CallServerSide(jsonPayload) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", API, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+        xhr.onreadystatechange = function() {
 
-          if (this.readyState == 4 && this.status == 200) {
-            console.log(xhr.responseText);
-              var jsonObject = JSON.parse( xhr.responseText );
-              fillTable();
-          }
-      };
-      xhr.send(jsonPayload);
-  } catch(err) {
-      console.log(err);
-  }
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(xhr.responseText);
+                var jsonObject = JSON.parse(xhr.responseText);
+                fillTable();
+            }
+        };
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.log(err);
+    }
 }
 
-function fillTable()
-{
-    var id = userCurrentlyLogged;
+function fillTable() {
+    var id = currentUserID;
 
-    if(!id)
-    {
-      console.log("no user is currently logged on");
-      return;
+    if (!id) {
+        console.log("no user is currently logged on");
+        return;
     }
     var jsonPayload = '{"function": "getContacts", "userID" : "' + id + '"}';
     var xhr = new XMLHttpRequest();
@@ -203,55 +195,50 @@ function fillTable()
         xhr.onreadystatechange = function() {
 
             if (this.readyState == 4 && this.status == 200) {
-              console.log(xhr.responseText);
-                var jsonObject = JSON.parse( xhr.responseText );
+                console.log(xhr.responseText);
+                var jsonObject = JSON.parse(xhr.responseText);
                 buildTableHeader();
                 buildTableData(jsonObject.results);
                 tableData = jsonObject.results;
             }
         };
         xhr.send(jsonPayload);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 }
 
-function deleteContacts()
-{
-  var nodeList = document.getElementsByClassName("deleteButton");
+function deleteContacts() {
+    var nodeList = document.getElementsByClassName("deleteButton");
 
-  console.log(nodeList);
+    console.log(nodeList);
 
-  if(!nodeList)
-  {
-    console.log("table hasnt loaded yet");
-    return;
-  }
-  for(var i = 0; i < nodeList.length; i++)
-  {
-    if(nodeList[i].checked)
-    {
-      var value = nodeList[i].parentNode.parentNode.parentNode.id;
-      console.log("value is : " + value);
-      var contactId = '"id" : "' + value + '"' ;
-      var functionName = '"function" : "deleteContact",';
-      var jsonPayload = "{"+functionName+contactId+"}";
-      console.log(jsonPayload);
-      CallServerSide(jsonPayload);
+    if (!nodeList) {
+        console.log("table hasnt loaded yet");
+        return;
     }
-    if(i == nodeList.length - 1) break;
-  }
-  var errorMessage = document.getElementById("loginResult");
-  errorMessage.innerHTML = "";
-  hideOrShow("confirmDelete", false);
-  hideOrShow("showDeleteMarks", true);
+    for (var i = 0; i < nodeList.length; i++) {
+        if (nodeList[i].checked) {
+            var value = nodeList[i].parentNode.parentNode.parentNode.id;
+            console.log("value is : " + value);
+            var contactId = '"id" : "' + value + '"';
+            var functionName = '"function" : "deleteContact",';
+            var jsonPayload = "{" + functionName + contactId + "}";
+            console.log(jsonPayload);
+            CallServerSide(jsonPayload);
+        }
+        if (i == nodeList.length - 1) break;
+    }
+    var errorMessage = document.getElementById("loginResult");
+    errorMessage.innerHTML = "";
+    hideOrShow("confirmDelete", false);
+    hideOrShow("showDeleteMarks", true);
 
-  // To prevent page refresh
-  return false;
+    // To prevent page refresh
+    return false;
 }
 
-function doCreateAccount()
-{
+function doCreateAccount() {
     var username = document.getElementById("createUser").value;
     var password = document.getElementById("createPassword").value;
     var confirm = document.getElementById("confirmPassword").value;
@@ -259,8 +246,7 @@ function doCreateAccount()
     // Ensure that the HTML login result message is blank
     // document.getElementById("createResult").innerHTML = "";
 
-    if(password !== confirm)
-    {
+    if (password !== confirm) {
         // document.getElementById("createResult").innerHTML = "Passwords don't match";
         return;
     }
@@ -279,14 +265,14 @@ function doCreateAccount()
     xhr.open("POST", API, false);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
-    try{
+    try {
         //send the xml request
         xhr.send(jsonPayload);
         console.log("*" + xhr.responseText);
 
         var jsonObject = JSON.parse(xhr.responseText);
 
-        if(jsonObject.error){
+        if (jsonObject.error) {
             // document.getElementById("createResult").innerHTML = jsonObject.error;
             return;
         }
@@ -297,48 +283,45 @@ function doCreateAccount()
         document.getElementById("confirmPassword").innerHTML = "";
 
         //hide sign up
-        hideOrShow("signupDiv",false);
+        hideOrShow("signupDiv", false);
 
         //go back to login page
         // hideOrShow("homepageWelcomeDiv",true);
 
-    }   catch(e) {
+    } catch (e) {
         // If there is an error parsing the JSON, attempt to set the HTML login result message
         document.getElementById("loginResult").innerHTML = e.message;
     }
 }
 
-function searchContacts()
-{
-  var typedSearch = document.getElementById("searchText").value;
-  var filteredData = tableData.filter(function (item) {
-      return (stringContains(item.contactId, typedSearch) || stringContains(item.firstName, typedSearch) || stringContains(item.lastName, typedSearch) || stringContains(item.phoneNumber, typedSearch) || stringContains(item.emailAddress, typedSearch));
-  });
-  buildTableHeader();
-  buildTableData(filteredData);
+function searchContacts() {
+    var typedSearch = document.getElementById("searchText").value;
+    var filteredData = tableData.filter(function(item) {
+        return (stringContains(item.contactId, typedSearch) || stringContains(item.firstName, typedSearch) || stringContains(item.lastName, typedSearch) || stringContains(item.phoneNumber, typedSearch) || stringContains(item.emailAddress, typedSearch));
+    });
+    buildTableHeader();
+    buildTableData(filteredData);
 }
 
 
-function selectContactsToDelete()
-{
-  hideOrShow("deleteHeader", true);
-  hideOrShowByClass("deleteButton", true);
-  hideOrShow("confirmDelete", true);
-  hideOrShow("showDeleteMarks", false);
+function selectContactsToDelete() {
+    hideOrShow("deleteHeader", true);
+    hideOrShowByClass("deleteButton", true);
+    hideOrShow("confirmDelete", true);
+    hideOrShow("showDeleteMarks", false);
 
-  // To prevent page refresh
-  return false;
-}
-function unSelectContactsToDelete()
-{
-  hideOrShow("deleteHeader", false);
-  hideOrShowByClass("deleteButton", false);
-  hideOrShow("confirmDelete", false);
-  hideOrShow("showDeleteMarks", true);
+    // To prevent page refresh
+    return false;
 }
 
-function buildTableHeader()
-{
+function unSelectContactsToDelete() {
+    hideOrShow("deleteHeader", false);
+    hideOrShowByClass("deleteButton", false);
+    hideOrShow("confirmDelete", false);
+    hideOrShow("showDeleteMarks", true);
+}
+
+function buildTableHeader() {
     var tud = document.getElementById("contactsTable");
     tud.innerHTML = "";
     var thr = document.createElement('tr');
@@ -364,14 +347,12 @@ function buildTableHeader()
     tud.appendChild(thr);
 }
 
-function buildTableData(data)
-{
+function buildTableData(data) {
     var tud = document.getElementById("contactsTable");
     var i;
-    if(!data)
-    {
-      console.log("data is not available");
-      return;
+    if (!data) {
+        console.log("data is not available");
+        return;
     }
     for (i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
@@ -406,7 +387,6 @@ function buildTableData(data)
     }
 }
 
-function stringContains(stringToCheck, substring)
-{
+function stringContains(stringToCheck, substring) {
     return stringToCheck.toLowerCase().indexOf(substring.toLowerCase()) != -1;
 }
