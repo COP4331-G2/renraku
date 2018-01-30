@@ -17,7 +17,7 @@ function doLogin() {
 
     // Setup the JSON payload to send to the API
     var jsonPayload = {
-        function: "loginAttemp",
+        function: "loginAttempt",
         username: username,
         username: password,
     };
@@ -309,9 +309,6 @@ function selectContactsToDelete() {
     hideOrShowByClass("deleteButton", true);
     hideOrShow("confirmDelete", true);
     hideOrShow("showDeleteMarks", false);
-
-    // To prevent page refresh
-    return false;
 }
 
 function unSelectContactsToDelete() {
