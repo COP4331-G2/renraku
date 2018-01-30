@@ -5,15 +5,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <!--<link href="css/styles.css" rel="stylesheet"> -->
 </head>
 <header>
     <title>Renraku</title>
+
+
+</header>
+
+<body>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Renraku</a>
+
+        <img style="height: 4%" src="images/renraku.png"><div class="col-sm-2"><a class="navbar-brand mt-0" href="#">連絡<hr class="mx-0 my-0"> <span style="font-size: 12px">Renraku</span> </a></div>
         <!-- div for Search and Add Contacts buttons
             ->Hidden on homepage, visible on logged in
             ->ID: loggedInButtonsDiv              -->
@@ -22,112 +30,117 @@
             </form>
         </div>
         <!-- UL class to seperate button spacing on navbar -->
-        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
-        </ul>
+
         <!-- Div for navbar buttons
             ->Visible on homepage, hidden while logged in
             ->ID: loginDiv  -->
-        <form class="form-inline mr-sm-2 my-2 my-lg-0">
+        <form class="form-inline mr-sm-2 my-2 my-lg-0 ml-auto">
             <div id="loginDiv">
                 <input class="form-control mr-sm-2 mr-sm-2" id="loginName" type="text" placeholder="Username" aria-label="Username">
                 <input class="form-control mr-sm-2" id="loginPassword" type="password" placeholder="Password" aria-label="Password">
-                <button type="button" class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" onclick="doLogin();">Login</button>
+                <button type="button" class="btn btn-primary mr-2 my-2 my-sm-0" id="loginButton" onclick="doLogin();"><i class="fas fa-sign-in-alt mr-1"></i>
+
+Login</button>
                 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#signupModal">
-                    Sign Up
+                    <i class="fas fa-user-plus mr-1"></i>Sign Up
                 </button>
-                <div class="container">
-                    <!-- The Modal -->
-                    <div class="modal fade" id="signupModal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Sign Up</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <!-- Modal body -->
-                                <div class="modal-body">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <!-- Form for creating a new account/new user. Form IDs:
-                        ->Username input field: createUser
-                        ->Password input field: createPassword
-                        ->Password confirmation: confirmPassowrd
-                        ->Button for Sign Up Submission: signUpButton -->
-                                            <form>
-                                                <div class="form-row">
-                                                    <div class="form-group col-md-3"></div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="createUser">Username</label>
-                                                        <input type="text" class="form-control" id="createUser" placeholder="Username">
-                                                        </br>
-                                                        <label for="createPassword">Password</label>
-                                                        <input type="password" class="form-control" id="createPassword" placeholder="Password">
-                                                        </br>
-                                                        <label for="confirmPassword">Confirm Password</label>
-                                                        <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Modal footer -->
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" id="createUserButton" data-dismiss="modal" onclick="doCreateAccount();">Create Account</button>
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             <!-- div for logout button and "Logged in as" text
             ->Hidden on homepage, always shown while logged in
             ->id = loggedInDiv  -->
-            <div id="loggedinDiv" class="form-row" style="display:none; visibility:hidden">
-                <ul class="navbar-nav mr-2 mt-md-0 ">
-                    <!-- span containing "logged in text"
+            <div id="loggedinDiv" style="display:none; visibility:hidden;">
+                <!-- span containing "logged in text"
                   ->Empty on homepage, always userLastName, userFirstName while logged in
                   ->id = loggedInUserFullName -->
-                    <li class="nav-item navbar-text">Logged in as<span class="navbar-text" id=loggedInUserFullName></span></li>
-                </ul>
-                <button type="button" class="btn btn-danger" id="logoutButton" onclick="doLogout();">Logout</button>
+                <span class="navbar-text">Logged in as&nbsp;</span><span class="navbar-text text-info mr-2" id=loggedInUserFullName>Sample User</span>
+                <button type="button" class="btn btn-danger ml-2" id="logoutButton" onclick="doLogout();"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
             </div>
         </form>
     </nav>
-</header>
-<div class="container">
-
-    <body>
-        <br></br>
-        <!-- Div for the homepage Welcome
-        ->Shown when on homepage
-        ->ID: homepageWelcomeDiv  -->
-        <div id="homepageWelcomeDiv" class="container-fluid mt-4 bg-light" style="display:none; visibility:hidden;">
-            <div class="row">
-                <div class="col">
-                    <h1 class="display-2 text-center">Welcome to</h1></br>
-                    <h1 class="display-1 text-center">Renroku</h1>
+    <div class="container">
+        <!-- The Modal -->
+        <div class="modal fade" id="signupModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Sign Up</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Form for creating a new account/new user. Form IDs:
+                                                ->Username input field: createUser
+                                                ->Password input field: createPassword
+                                                ->Password confirmation: confirmPassowrd
+                                                ->Button for Sign Up Submission: signUpButton -->
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-3"></div>
+                                        <div class="form-group col-md-6">
+                                            <label for="createUser">Username</label>
+                                            <input type="text" class="form-control" id="createUser" placeholder="Username">
+                                            <br>
+                                            <label for="createPassword">Password</label>
+                                            <input type="password" class="form-control" id="createPassword" placeholder="Password">
+                                            <br>
+                                            <label for="confirmPassword">Confirm Password</label>
+                                            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <span id="createResult" class="text-danger mr-auto">Sample error message</span>
+                        <button type="button" class="btn btn-secondary" id="createUserButton" data-dismiss="modal" onclick="doCreateAccount();">Create Account</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <span id="loginResult"> </span>
-        <!-- Div that dispalys contacts and search bar
+    </div>
+
+
+
+    <!-- Div for the homepage Welcome
+        ->Shown when on homepage
+        ->ID: homepageWelcomeDiv  -->
+    <div id="landingPageDiv" class="container-fluid bg">
+        <div class="row mh-100" style="height: 600px">
+            <div class="col-md-2"></div>
+            <div class="col-md-3 mt-auto">
+                <h1 style="font-size: 200px" class="display-1 text-center font-weight-bold">連絡</h1>
+                <hr>
+                <h2 class="text-center">Renraku</h2>
+            </div>
+            <div class="col-md-5 mt-auto ml-auto">
+                <img style="height: 60%" src="images/screenshot.png">
+            </div>
+        </div>
+    </div>
+    <span id="loginResult"> </span>
+    <!-- Div that dispalys contacts and search bar
         ->Hidden on homepage, shown while on contact List
       ->id = accessUIDiv
       -> Function for searching a contact changed from: searchColor() To: searchContact()
       -> ID for search contact result changed from: colorSearchResult To: contactSearchResult -->
-        <div id="accessUIDiv" style="display:none; visibility:hidden;">
+    <div id="accessUIDiv" style="display:none; visibility:hidden;">
+        <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
                     <form class="form-inline mr-sm-2 my-2 my-lg-0">
-                        <input type="text" class="form-control col-sm-6 mx-2" id="searchText" placeholder="Search Contacts" oninput="searchContacts();">
-                        <button type="button" class="btn btn-primary col-md-2 mx-2" data-toggle="modal" data-target="#myModal">
-                            Add New Contact
+                        <input type="text" class="form-control mr-auto" id="searchText" placeholder="Search Contacts" oninput="searchContacts();">
+                        <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#myModal">
+                            <i class="fas fa-plus-circle mr-1"></i> Add Contact
                         </button>
-                        <button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger mx-2">Delete Contacts</button>
-                        <button type="button" id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();" class="btn btn-danger mx-2">Confirm Delete</button>
+                        <button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger mx-1"><i class="fas fa-minus-circle mr-1"></i>Delete Contacts</button>
+                        <button type="button" id="confirmDelete" style="display:none; visibility:hidden;" onclick="deleteContacts();" class="btn btn-danger mx-1"><i class="fas fa-minus-circle mr-1"></i>Confirm Delete</button>
                     </form>
                 </div>
                 <div class="card-body">
@@ -140,7 +153,9 @@
                     C Renraku
                 </div>
             </div>
-            <!-- New Contact Modal -->
+        </div>
+        <!-- New Contact Modal -->
+        <div class="container">
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -184,77 +199,80 @@
                           ->Function for creating a contact changed from: addColor() To: addContact()
                           ->ID for create contact button changed from: addColorButton To: addContactButton
                           ->Cancel creating a contact button ID: cancelContactButton  -->
+
+                                        </form>
                                     </div>
-                                    </form>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Modal footer -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" id="addContactButton" onclick="addContact();" data-dismiss="modal">Add Contact</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                            <span id="contactAddResult"></span>
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <span id="contactAddResult" class="text-danger mr-auto">Sample error message</span>
+                                <button type="button" class="btn btn-secondary" id="addContactButton" onclick="addContact();" data-dismiss="modal">Add Contact</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-</div>
+    </div>
+
+
+
+    <script>
+        var input = document.getElementById("loginPassword");
+        input.addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("loginButton").click();
+            }
+        });
+    </script>
+    <script>
+        var input = document.getElementById("firstNameNewEntry");
+        input.addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("addContactButton").click();
+            }
+        });
+    </script>
+    <script>
+        var input = document.getElementById("lastNameNewEntry");
+        input.addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("addContactButton").click();
+            }
+        });
+    </script>
+    <script>
+        var input = document.getElementById("emailNewEntry");
+        input.addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("addContactButton").click();
+            }
+        });
+    </script>
+    <script>
+        var input = document.getElementById("phoneNewEntry");
+        input.addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("addContactButton").click();
+            }
+        });
+    </script>
+    <script>
+        var input = document.getElementById("confirmPassword");
+        input.addEventListener("keyup", function(event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById("createUserButton").click();
+            }
+        });
+    </script>
 </body>
-</div>
-<script>
-var input = document.getElementById("loginPassword");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        document.getElementById("loginButton").click();
-    }
-});
-</script>
-<script>
-var input = document.getElementById("firstNameNewEntry");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        document.getElementById("addContactButton").click();
-    }
-});
-</script>
-<script>
-var input = document.getElementById("lastNameNewEntry");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        document.getElementById("addContactButton").click();
-    }
-});
-</script>
-<script>
-var input = document.getElementById("emailNewEntry");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        document.getElementById("addContactButton").click();
-    }
-});
-</script>
-<script>
-var input = document.getElementById("phoneNewEntry");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        document.getElementById("addContactButton").click();
-    }
-});
-</script>
-<script>
-var input = document.getElementById("confirmPassword");
-input.addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        document.getElementById("createUserButton").click();
-    }
-});
-</script>
 
 </html>
