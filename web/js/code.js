@@ -136,7 +136,7 @@ function addContact() {
     var emailAddress = document.getElementById("emailNewEntry").value;
 
     if (!firstName && !lastName && !phoneNumber && !emailAddress) {
-        document.getElementById("contactAddResult").innerHTML = "Cannot leave all contact information empty";
+        document.getElementById("contactAddResult").innerHTML = "Please fill in information.";
         return false;
     }
 
@@ -215,31 +215,28 @@ function fillTable() {
 function deleteContacts() {
     var nodeList = document.getElementsByClassName("deleteButton");
 
-    if (!nodeList) {
-        return;
-    }
+    if (nodeList) {
+        for (var i = 0; i < nodeList.length; i++) {
+            if (nodeList[i].checked) {
+                var contactID = nodeList[i].parentNode.parentNode.parentNode.id;
 
-    for (var i = 0; i < nodeList.length; i++) {
-        if (nodeList[i].checked) {
-            var contactID = nodeList[i].parentNode.parentNode.parentNode.id;
+                var jsonPayload = {
+                    function: "deleteContact",
+                    id: contactID,
+                };
+                jsonPayload = JSON.stringify(jsonPayload);
 
-            var jsonPayload = {
-                function: "deleteContact",
-                id: contactID,
-            };
-            jsonPayload = JSON.stringify(jsonPayload);
-
-            CallServerSide(jsonPayload);
+                CallServerSide(jsonPayload);
+            }
+            if (i == nodeList.length - 1) break;
         }
-        if (i == nodeList.length - 1) break;
     }
-    var errorMessage = document.getElementById("loginResult");
-    errorMessage.innerHTML = "";
-    hideOrShow("confirmDelete", false);
-    hideOrShow("showDeleteMarks", true);
 
-    // To prevent page refresh
-    return false;
+    // hideOrShow("confirmDelete", false);
+    // hideOrShow("showDeleteMarks", true);
+    unSelectContactsToDelete();
+
+    return true;
 }
 
 function createAccount() {
