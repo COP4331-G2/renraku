@@ -7,7 +7,7 @@ var tableData;
 /**
  * Attempt to login with the supplied username and password
  */
-function doLogin() {
+function login() {
     // Get the username and password from the HTML fields
     var username = document.getElementById("loginName").value;
     var password = document.getElementById("loginPassword").value;
@@ -37,14 +37,16 @@ function doLogin() {
 
         // Parse the JSON returned from the request
         var jsonObject = JSON.parse(xhr.responseText);
-        currentUserID = jsonObject.results;
-        console.log("Current UserID: " + currentUserID);
 
         // If the returned JSON contains an error then set the HTML login result message
         if (jsonObject.error || !jsonObject.success) {
             document.getElementById("loginResult").innerHTML = jsonObject.error;
-            return;
+            return false;
         }
+
+        // Set current user data
+        currentUserID = jsonObject.results.id;
+        console.log("Current UserID: " + currentUserID);
 
         // Reset the HTML fields to blank
         document.getElementById("loginName").value = "";
@@ -66,6 +68,10 @@ function doLogin() {
         // If there is an error parsing the JSON, attempt to set the HTML login result message
         document.getElementById("loginResult").innerHTML = e.message;
     }
+
+    document.getElementById("currentUserName").innerHTML = jsonObject.results.username;
+
+    return true;
 }
 
 /**
@@ -130,8 +136,8 @@ function addContact() {
     var emailAddress = document.getElementById("emailNewEntry").value;
 
     if (!firstName && !lastName && !phoneNumber && !emailAddress) {
-        document.getElementById("loginResult").innerHTML = "Cannot leave all contact information empty";
-        return;
+        document.getElementById("contactAddResult").innerHTML = "Cannot leave all contact information empty";
+        return false;
     }
 
     var jsonPayload = {
@@ -145,13 +151,15 @@ function addContact() {
     jsonPayload = JSON.stringify(jsonPayload);
 
     CallServerSide(jsonPayload);
-    document.getElementById("loginResult").innerHTML = "";
+    document.getElementById("contactAddResult").innerHTML = "";
     hideOrShow("accessUIDiv", true);
 
     document.getElementById("firstNameNewEntry").value = "";
     document.getElementById("lastNameNewEntry").value = "";
     document.getElementById("emailNewEntry").value = "";
     document.getElementById("phoneNewEntry").value = "";
+
+    return true;
 }
 
 function CallServerSide(jsonPayload) {
@@ -234,10 +242,12 @@ function deleteContacts() {
     return false;
 }
 
-function doCreateAccount() {
+function createAccount() {
     var username = document.getElementById("createUser").value;
     var password = document.getElementById("createPassword").value;
     var confirm = document.getElementById("confirmPassword").value;
+
+    document.getElementById("createResult").innerHTML = "";
 
     // Ensure that the HTML login result message is blank
     // document.getElementById("createResult").innerHTML = "";
@@ -268,8 +278,8 @@ function doCreateAccount() {
         var jsonObject = JSON.parse(xhr.responseText);
 
         if (jsonObject.error) {
-            // document.getElementById("createResult").innerHTML = jsonObject.error;
-            return;
+            document.getElementById("createResult").innerHTML = jsonObject.error;
+            return false;
         }
 
         //make forms blank
@@ -278,7 +288,7 @@ function doCreateAccount() {
         document.getElementById("confirmPassword").innerHTML = "";
 
         //hide sign up
-        hideOrShow("signupDiv", false);
+        // hideOrShow("signupDiv", false);
 
         //go back to login page
         // hideOrShow("homepageWelcomeDiv",true);
@@ -287,6 +297,8 @@ function doCreateAccount() {
         // If there is an error parsing the JSON, attempt to set the HTML login result message
         document.getElementById("loginResult").innerHTML = e.message;
     }
+
+    return true;
 }
 
 function searchContacts() {
@@ -346,7 +358,7 @@ function buildTableData(data) {
         return;
     }
     for (i = 0; i < data.length; i++) {
-        var tableRow =document.createElement('tr');
+        var tableRow = document.createElement('tr');
         tableRow.id = data[i].contactId;
         var firstName = document.createElement('td');
         firstName.innerHTML = data[i].firstName;

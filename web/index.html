@@ -47,7 +47,7 @@
                 <!-- span containing "logged in text"
                   ->Empty on homepage, always userLastName, userFirstName while logged in
                   ->id = loggedInUserFullName -->
-                <span class="navbar-text">Logged in as&nbsp;</span><span class="navbar-text text-info mr-2" id=loggedInUserFullName>Sample User</span>
+                <span class="navbar-text">Logged in as&nbsp;</span><span class="navbar-text text-info mr-2" id="currentUserName"></span>
                 <button type="button" class="btn btn-danger ml-2" id="logoutButton" onclick="doLogout();"><i class="fas fa-sign-out-alt mr-1"></i>Logout</button>
             </div>
         </form>
@@ -91,9 +91,36 @@
                     </div>
                     <!-- Modal footer -->
                     <div class="modal-footer">
-                        <span id="createResult" class="text-danger mr-auto">Sample error message</span>
-                        <button type="button" class="btn btn-secondary" id="createUserButton" data-dismiss="modal" onclick="doCreateAccount();">Create Account</button>
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <span id="createResult" class="text-danger mr-auto"> </span>
+                        <button type="button" class="btn btn-secondary" id="createUserButton" onclick="doCreateAccount();">Create Account</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="clearErrors();">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- The Modal -->
+        <div class="modal fade" id="loginErrorModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Login Error</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <span id="loginResult">&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <span id="createResult" class="text-danger mr-auto"> </span>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="clearErrors();">Close</button>
                     </div>
                 </div>
             </div>
@@ -115,7 +142,6 @@
             </div>
         </div>
     </div>
-    <span id="loginResult"> </span>
     <!-- Div that dispalys contacts and search bar
         ->Hidden on homepage, shown while on contact List
       ->id = accessUIDiv
@@ -127,7 +153,7 @@
                 <div class="card-header">
                     <form class="form-inline mr-sm-2 my-2 my-lg-0">
                         <input type="text" class="form-control mr-auto" id="searchText" placeholder="Search Contacts" oninput="searchContacts();">
-                        <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#myModal">
+                        <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target="#addContactModal">
                             <i class="fas fa-plus-circle mr-1"></i> Add Contact
                         </button>
                         <button type="button" onclick="selectContactsToDelete();" id="showDeleteMarks" class="btn btn-danger mx-1"><i class="fas fa-minus-circle mr-1"></i>Delete Contacts</button>
@@ -147,7 +173,7 @@
         </div>
         <!-- New Contact Modal -->
         <div class="container">
-            <div class="modal fade" id="myModal">
+            <div class="modal fade" id="addContactModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
@@ -196,9 +222,9 @@
                             </div>
                             <!-- Modal footer -->
                             <div class="modal-footer">
-                                <span id="contactAddResult" class="text-danger mr-auto">Sample error message</span>
-                                <button type="button" class="btn btn-secondary" id="addContactButton" onclick="addContact();" data-dismiss="modal">Add Contact</button>
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                <span id="contactAddResult" class="text-danger mr-auto"> </span>
+                                <button type="button" class="btn btn-secondary" id="addContactButton" onclick="doAddContact();">Add Contact</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="clearErrors();">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -259,6 +285,33 @@
             document.getElementById("createUserButton").click();
         }
     });
+    </script>
+    <script>
+    function doCreateAccount() {
+        if (createAccount()) {
+            $("#signupModal").modal('hide');
+            clearErrors();
+        }
+    }
+
+    function doAddContact() {
+        if (addContact()) {
+            $("#addContactModal").modal('hide');
+            clearErrors();
+        }
+    }
+
+    function clearErrors() {
+        document.getElementById("loginResult").innerHTML = "";
+        document.getElementById("createResult").innerHTML = "";
+        document.getElementById("contactAddResult").innerHTML = "";
+    }
+
+    function doLogin() {
+        if (!login()) {
+            $("#loginErrorModal").modal('show');
+        }
+    }
     </script>
 </body>
 

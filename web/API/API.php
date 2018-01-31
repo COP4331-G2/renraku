@@ -67,8 +67,13 @@ function loginAttempt($dbConnection, $jsonPayload)
         // Verify if the password is correct
         if (password_verify($password, $row['password'])) {
             // If the password is correct...
+            // Setup a JSON response
+            $response = [
+                'id'       => $row['id'],
+                'username' => $row['username'],
+            ];
             // Return the JSON success response (including user's id)
-            returnSuccess('Login successful.', $row['id']);
+            returnSuccess('Login successful.', $response);
         } else {
             // If the password isn't correct...
             // Return a JSON error response
