@@ -268,7 +268,7 @@ function createAccount() {
     // document.getElementById("createResult").innerHTML = "";
 
     if (password !== confirm) {
-        // document.getElementById("createResult").innerHTML = "Passwords don't match";
+        document.getElementById("createResult").innerHTML = "Passwords don't match.";
         return;
     }
 
