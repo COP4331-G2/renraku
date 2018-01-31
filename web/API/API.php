@@ -17,6 +17,8 @@ callVariableFunction($dbConnection, $jsonPayload);
 /* *************** */
 
 /**
+ * TODO: This should check against a whitelist
+ *
  * Call a variable function passed as a string from the client-side
  *
  * @param mysqli $dbConnection MySQL connection instance

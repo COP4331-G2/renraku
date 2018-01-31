@@ -375,6 +375,7 @@ function buildTableData(data) {
     for (i = 0; i < data.length; i++) {
         var tableRow = document.createElement('tr');
         tableRow.id = data[i].contactId;
+        tableRow.align = "center";
         var firstName = document.createElement('td');
         firstName.innerHTML = data[i].firstName;
         var lastName = document.createElement('td');
