@@ -15,6 +15,11 @@ function login() {
     // Ensure that the HTML login result message is blank
     document.getElementById("loginResult").innerHTML = "";
 
+    // Fail Whale (easter egg)
+    if (username === "failwhale") {
+        window.location.replace("fail_whale.html");
+    }
+
     // Setup the JSON payload to send to the API
     var jsonPayload = {
         function: "loginAttempt",
