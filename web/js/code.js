@@ -4,6 +4,18 @@ const API = "API/API.php";
 var currentUserID;
 var tableData;
 
+var failwhale = `
+<pre>
+                   .
+                  ":"
+                ___:____      |"\\/"|
+              ,'        \\'.    \\  /
+              |  o        \\\\___/  |
+            ~^~^~^~^~^~^~^~^~^~^~^~^~
+                   (fail whale)
+</pre>
+`;
+
 /**
  * Attempt to login with the supplied username and password
  */
@@ -17,8 +29,8 @@ function login() {
 
     // Fail Whale (easter egg)
     if (username === "failwhale") {
-        window.location.href = "fail_whale.html";
-        return;
+        document.getElementById("loginResult").innerHTML = failwhale;
+        return false;
     }
 
     // Setup the JSON payload to send to the API
