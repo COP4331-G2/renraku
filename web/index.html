@@ -281,6 +281,7 @@
     var input = document.getElementById("confirmPassword");
     input.addEventListener("keyup", function(event) {
         event.preventDefault();
+        // 13 = Enter key
         if (event.keyCode === 13) {
             document.getElementById("createUserButton").click();
         }
@@ -312,6 +313,18 @@
             $("#loginErrorModal").modal('show');
         }
     }
+    </script>
+    <script>
+    document.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        // 27 = Escape key
+        if (event.keyCode === 27) {
+            $("#signupModal").modal('hide');
+            $("#addContactModal").modal('hide');
+            $("#loginErrorModal").modal('hide');
+            clearErrors();
+        }
+    });
     </script>
 </body>
 
