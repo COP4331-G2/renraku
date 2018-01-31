@@ -17,7 +17,8 @@ function login() {
 
     // Fail Whale (easter egg)
     if (username === "failwhale") {
-        window.location.replace("fail_whale.html");
+        window.location.href = "fail_whale.html";
+        return;
     }
 
     // Setup the JSON payload to send to the API
