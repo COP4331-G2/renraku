@@ -239,3 +239,13 @@ function getContacts($dbConnection, $jsonPayload)
     // Return the built searchResults array prepared for a JSON response
     returnSuccess('Contacts found.', $searchResults);
 }
+
+/**
+ * TESTING FUNCTION FOR MUSU
+ */
+function musuTest($dbConnection, $jsonPayload)
+{
+    $result = $dbConnection->query("SELECT username FROM Users WHERE userID = 1");
+
+    returnSuccess('MUSU TEST', $result);
+}
