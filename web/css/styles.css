@@ -20,7 +20,7 @@ body, html
 
 }
 
-.card-body
+.scrollertable
 {
     overflow:scroll;
     height: 70%;
