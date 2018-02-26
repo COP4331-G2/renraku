@@ -1,8 +1,11 @@
-body, html {
+body, html
+{
     height: 100%;
     overflow: hidden;
 }
-.bg { 
+
+.bg 
+{ 
     /* The image used */
     background-image: url("http://blacktie.co/demo/premium/maxfront/demos/sliderbg_01.png");
 
@@ -15,4 +18,10 @@ body, html {
     background-size: cover;
     background-attachment: local;
 
+}
+
+.scrollit
+{
+    overflow:scroll;
+    height:800px;
 }
