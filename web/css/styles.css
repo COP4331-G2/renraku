@@ -23,5 +23,4 @@ body, html
 .card-body
 {
     overflow:scroll;
-    height:800px;
 }
