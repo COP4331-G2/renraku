@@ -94,57 +94,57 @@ function loginAttempt($dbConnection, $jsonPayload)
  * @param mysqli $dbConnection MySQL connection instance
  * @param object $jsonPayload Decoded JSON stdClass object
  */
-function createUser($dbConnection, $jsonPayload)
-{
-    // Get the username and password from the JSON payload
-    $username = trim($jsonPayload['username']);
-    $password = $jsonPayload['password'];
+ function createUser($dbConnection, $jsonPayload)
+ {
+     // Get the username and password from the JSON payload
+     $username = trim($jsonPayload['username']);
+     $password = $jsonPayload['password'];
 
-    // Check for various error-inducing situations
-    if (strlen($username) > 60) {
-        returnError('Username cannot exceed 60 characters.');
-    } else if (strlen($username) <= 0) {
-        returnError('Username cannot be empty.');
-    } else if (strlen($password) <= 0) {
-        returnError('Password cannot be empty.');
-    } else {
-        // This block uses prepared statements and parameterized queries to protect against SQL injection
-        // MySQL query to check if a username already exists in the database
-        $query = $dbConnection->prepare("SELECT * FROM Users WHERE username = ?");
-        $query->bind_param('s', $username);
-        $query->execute();
+     // Check for various error-inducing situations
+     if (strlen($username) > 60) {
+         returnError('Username cannot exceed 60 characters.');
+     } else if (strlen($username) <= 0) {
+         returnError('Username cannot be empty.');
+     } else if (strlen($password) <= 0) {
+         returnError('Password cannot be empty.');
+     } else {
+         // This block uses prepared statements and parameterized queries to protect against SQL injection
+         // MySQL query to check if a username already exists in the database
+         $query = $dbConnection->prepare("SELECT * FROM Users WHERE username = ?");
+         $query->bind_param('s', $username);
+         $query->execute();
 
-        // Result from the query
-        $result = $query->get_result();
+         // Result from the query
+         $result = $query->get_result();
 
-        // If a username already exists...
-        // Return a JSON error response
-        if ($result->num_rows > 0) {
-            returnError('Username already exists.');
-        }
+         // If a username already exists...
+         // Return a JSON error response
+         if ($result->num_rows > 0) {
+             returnError('Username already exists.');
+         }
 
-        // Encrypt the password (using PHP defaults)
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+         // Encrypt the password (using PHP defaults)
+         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // This block uses prepared statements and parameterized queries to protect against SQL injection
-        // MySQL query to add the username and password into the database
-        $query = $dbConnection->prepare("INSERT INTO Users (username, password) VALUES (?, ?)");
-        $query->bind_param('ss', $username, $hashedPassword);
-        $query->execute();
+         // This block uses prepared statements and parameterized queries to protect against SQL injection
+         // MySQL query to add the username and password into the database
+         $query = $dbConnection->prepare("INSERT INTO Users (username, password) VALUES (?, ?)");
+         $query->bind_param('ss', $username, $hashedPassword);
+         $query->execute();
 
-        // Result from the query
-        $result = $query->get_result();
+         // Result from the query
+         $result = $query->get_result();
 
-        // Check to see if the insertion was successful...
-        if ($result) {
-            // If successful, return JSON success response
-            returnSuccess('User created.');
-        } else {
-            // If not successful, return JSON error response
-            returnError($dbConnection->error);
-        }
-    }
-}
+         // Check to see if the insertion was successful...
+         if ($result) {
+             // If successful, return JSON success response
+             returnSuccess('User created.');
+         } else {
+             // If not successful, return JSON error response
+             returnError($dbConnection->error);
+         }
+     }
+ }
 
 /**
  * Add a contact to a user's account
